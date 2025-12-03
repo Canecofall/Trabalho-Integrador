@@ -130,7 +130,3 @@ export default function Login({ handleLogin }) {
 		</>
 	);
 }
-
-// Login.propTypes = {
-// 	setToken: PropTypes.func.isRequired,
-// };
