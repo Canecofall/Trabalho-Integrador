@@ -2,7 +2,11 @@
   import axios from "axios";
   import Login from "./componentes/paginas/login/login.jsx";
   import Menu_ini from "./componentes/paginas/menu_ini/menu_principal.jsx";
+  import "./componentes/tema/Style.css";
   import { Box, Stack, Typography } from "@mui/material";
+
+
+
 
   export default function App() {
     const [permissoes, setPermissoes] = useState([]);
@@ -76,11 +80,8 @@ useEffect(() => {
     // Se não estiver logado → mostra login
     if (!isLoggedIn) {
       return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-          <Stack spacing={2} alignItems="center">
-            <Typography variant="h4">Login</Typography>
+          <Box id="bg">
             <Login handleLogin={handleLogin} />
-          </Stack>
         </Box>
       );
     }

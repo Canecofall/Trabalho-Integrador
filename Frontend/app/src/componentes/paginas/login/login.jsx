@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-
+import "./login.css";
 import { Alert, Box, Button, Snackbar, Stack, TextField } from "@mui/material";
 
 export default function Login({ handleLogin }) {
@@ -58,13 +58,16 @@ export default function Login({ handleLogin }) {
 	}
 
 	return (
-		<Box style={{ maxWidth: "300px" }}>
+		<>
+		<div id="bg">
+			<Box id="bg">
+				<h1 id="titulo-login">login</h1>
 			<Stack spacing={2}>
 				<Stack spacing={2}>
 					<TextField
 						required
 						id="username-input"
-						label="Usuario"
+						label="Email"
 						size="small"
 						value={username}
 						onChange={(event) => {
@@ -74,7 +77,7 @@ export default function Login({ handleLogin }) {
 					<TextField
 						required
 						id="passwd-input"
-						label="senha"
+						label="Senha"
 						type="password"
 						size="small"
 						value={passwd}
@@ -85,17 +88,7 @@ export default function Login({ handleLogin }) {
 				</Stack>
 				<Stack direction="row" spacing={3}>
 					<Button
-						variant="contained"
-						style={{
-							maxWidth: "100px",
-							minWidth: "100px",
-						}}
-						color="primary"
-						onClick={enviaLogin}
-					>
-						Enviar
-					</Button>
-					<Button
+
 						variant="outlined"
 						style={{
 							maxWidth: "100px",
@@ -105,6 +98,18 @@ export default function Login({ handleLogin }) {
 						onClick={cancelaLogin}
 					>
 						Cancelar
+						
+					</Button>
+					<Button
+						variant="contained"
+						style={{
+							maxWidth: "100px",
+							minWidth: "100px",
+						}}
+						color="primary"
+						onClick={enviaLogin}
+					>
+						Enviar
 					</Button>
 				</Stack>
 				<Snackbar
@@ -121,6 +126,8 @@ export default function Login({ handleLogin }) {
 				</Snackbar>
 			</Stack>
 		</Box>
+		</div>
+		</>
 	);
 }
 

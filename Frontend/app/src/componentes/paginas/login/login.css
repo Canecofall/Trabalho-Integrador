@@ -1,16 +1,15 @@
-#bg {
+#background {
   background-color: whitesmoke;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  width: 100vw; 
 }
 
 #titulo-login {
-  background-color: whitesmoke;
-  margin-bottom: 20px;
-  font-size: 28px;
   font-weight: bolder;
   font-family: "Helvetica";
+  font-size: xx-large;  
 }
