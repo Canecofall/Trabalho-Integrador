@@ -14,6 +14,12 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [telaAtual, setTelaAtual] = useState("dashboard");
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setUserEmail("");
+    setTelaAtual("dashboard");
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -91,8 +97,8 @@ export default function App() {
   // Tela logada
   return (
     <>
-      <Menu_ini trocarTela={setTelaAtual} />
-      {telaAtual === "dashboard" && <Dashboard/>} 
+      <Menu_ini trocarTela={setTelaAtual} onLogout={handleLogout} />
+      {telaAtual === "dashboard" && <Dashboard />}
       {telaAtual === "equipamentos" && <EquipamentosCatalogo />}
       {telaAtual === "ordens" && <OrdensDeServicoCatalogo />}
       {telaAtual === "servicos" && <ServicosCatalogo />}
