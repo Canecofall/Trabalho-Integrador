@@ -20,7 +20,11 @@ export default function App() {
   const [ordemSelecionada, setOrdemSelecionada] = useState(null);
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
   const [EquipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
-
+  const telasSemMenu = [
+    "verOrdem", "editarOrdem", "criarOrdem",
+    "verServico", "editarServico", "criarServico",
+    "verEquipamento", "editarEquipamento", "criarEquipamento"
+  ];
   const trocarTela = (novaTela, id = null) => {
     setTelaAtual(novaTela);
     if (novaTela.includes("Ordem")) {
@@ -34,12 +38,36 @@ export default function App() {
     }
   };
 
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserEmail("");
     setTelaAtual("dashboard");
+  };
+
+  const buscarPermissoesPorEmail = async (email) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `http://localhost:3002/usuario_permissao/usuario/${email}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setPermissoes(response.data.permissoes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLogin = (success, username = null) => {
+    if (success) {
+      if (username) setUserEmail(username);
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+      setUserEmail("");
+      localStorage.removeItem("token");
+    }
   };
 
   useEffect(() => {
@@ -64,19 +92,6 @@ export default function App() {
     }
   }, [isLoggedIn, userEmail]);
 
-  const buscarPermissoesPorEmail = async (email) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `http://localhost:3002/usuario_permissao/usuario/${email}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setPermissoes(response.data.permissoes);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -94,17 +109,7 @@ export default function App() {
     }
   }, []);
 
-  const handleLogin = (success, username = null) => {
-    if (success) {
-      if (username) setUserEmail(username);
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-      setUserEmail("");
-      localStorage.removeItem("token");
-    }
-  };
-
+  
 
   if (!isLoggedIn) {
     return (
@@ -116,7 +121,9 @@ export default function App() {
 
   return (
     <>
-      <Menu_ini trocarTela={trocarTela} onLogout={handleLogout} />
+      {!telasSemMenu.includes(telaAtual) && (
+        <Menu_ini trocarTela={trocarTela} onLogout={handleLogout} />
+      )}
       {telaAtual === "dashboard" && <Dashboard />}
       {telaAtual === "equipamentos" && (
         <EquipamentosCatalogo trocarTela={trocarTela} />)}

@@ -52,8 +52,15 @@ const deletarUsuario = async (usuario) => {
 		throw error;
 	}
 };
+// Contar usuarios ativos
+async function contarUsuariosAtivos() {
+  return usuario.count({
+    where: { ativo: true }
+  });
+}
 
 module.exports = {
+	contarUsuariosAtivos,
 	obterTodosUsuarios,
 	obterUsuarioPorEmail,
 	obterUsuarioComPermissoes,

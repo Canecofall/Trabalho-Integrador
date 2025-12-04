@@ -7,7 +7,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import axios from "axios";
 
-export default function Dashboard() {
+  export default function Dashboard(){
 
     const [dados, setDados] = useState({
         usuariosAtivos: 0,
@@ -39,7 +39,7 @@ export default function Dashboard() {
         return () => clearInterval(interval);
     }, []);
 
-    return (
+    return(
         <>
             <Typography class="texto" gutterBottom>
                 Dashboard
@@ -62,6 +62,6 @@ export default function Dashboard() {
             </Grid>
         </>
     );
-}
+  }
 
 
