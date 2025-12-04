@@ -23,7 +23,7 @@ const mockServicosCatalogo = [
   { id: 3, nome: "Limpeza interna e troca de pasta térmica", preco: 120 },
 ];
 
-export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
+export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
   const [ordem, setOrdem] = useState({
     nome: "",
     cpfCnpj: "",
@@ -171,74 +171,80 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
         <Grid item xs={12}>
           <TextField fullWidth label="Modelo" name="modelo" value={ordem.modelo} onChange={handleChange} />
         </Grid>
-      </Grid>
- {/* Seleção de Serviços */}
-      <Typography variant="subtitle1" sx={{ mt: 4, mb: 1 }}>
-        Serviços
-      </Typography>
-      <Divider sx={{ mb: 2 }} />
+      </Grid>{modo !== "verOrdem" && (
+        <>
+          {/* Seleção de Serviços */}
+          <Typography variant="subtitle1" sx={{ mt: 4, mb: 1 }}>
+            Serviços
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
 
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Select
-            fullWidth
-            value={servicoSelecionado}
-            onChange={(e) => setServicoSelecionado(e.target.value)}
-            displayEmpty
-          >
-            <MenuItem value="">
-              <em>Selecione um serviço</em>
-            </MenuItem>
-            {mockServicosCatalogo.map((s) => (
-              <MenuItem key={s.id} value={s.id}>
-                {s.nome} - R$ {s.preco}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-        <Grid item xs={3}>
-          <TextField
-            fullWidth
-            type="number"
-            label="Qtd"
-            value={qtd}
-            onChange={(e) => setQtd(Number(e.target.value))}
-          />
-        </Grid>
-        <Grid item xs={3}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={adicionarServico}
-            sx={{ height: "100%" }}
-          >
-            Adicionar
-          </Button>
-        </Grid>
-      </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Select
+                fullWidth
+                value={servicoSelecionado}
+                onChange={(e) => setServicoSelecionado(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="">
+                  <em>Selecione um serviço</em>
+                </MenuItem>
+                {mockServicosCatalogo.map((s) => (
+                  <MenuItem key={s.id} value={s.id}>
+                    {s.nome} - R$ {s.preco}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                type="number"
+                label="Qtd"
+                value={qtd}
+                onChange={(e) => setQtd(Number(e.target.value))}
+              />
+            </Grid>
+
+            <Grid item xs={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={adicionarServico}
+                sx={{ height: "100%" }}
+              >
+                Adicionar
+              </Button>
+            </Grid>
+          </Grid>
+        </>
+      )}
 
       {/* Lista de serviços escolhidos */}
-      <Table sx={{ mt: 2 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Nome</TableCell>
-            <TableCell>Qtd</TableCell>
-            <TableCell>Preço</TableCell>
-            <TableCell>Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {servicosEscolhidos.map((s) => (
-            <TableRow key={s.id}>
-              <TableCell>{s.nome}</TableCell>
-              <TableCell>{s.qtd}</TableCell>
-              <TableCell>R$ {s.preco}</TableCell>
-              <TableCell>R$ {s.qtd * s.preco}</TableCell>
+      {servicosEscolhidos.length > 0 && (
+        <Table sx={{ mt: 2 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Nome</TableCell>
+              <TableCell>Qtd</TableCell>
+              <TableCell>Preço</TableCell>
+              <TableCell>Total</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
+          </TableHead>
+          <TableBody>
+            {servicosEscolhidos.map((s) => (
+              <TableRow key={s.id}>
+                <TableCell>{s.nome}</TableCell>
+                <TableCell>{s.qtd}</TableCell>
+                <TableCell>R$ {s.preco}</TableCell>
+                <TableCell>R$ {s.qtd * s.preco}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
       {/* Botões de ação */}
       <Box sx={{ mt: 4, display: "flex", gap: 2 }}>
         <Button

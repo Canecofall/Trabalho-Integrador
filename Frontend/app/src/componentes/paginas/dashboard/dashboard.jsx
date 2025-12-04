@@ -7,12 +7,11 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import axios from "axios";
 
-  export default function Dashboard(){
+export default function Dashboard() {
 
     const [dados, setDados] = useState({
         usuariosAtivos: 0,
         ordensFinalizadas: 0,
-        produtos: 0,
     });
 
     // Atualização dinâmica
@@ -40,7 +39,7 @@ import axios from "axios";
         return () => clearInterval(interval);
     }, []);
 
-    return(
+    return (
         <>
             <Typography class="texto" gutterBottom>
                 Dashboard
@@ -60,16 +59,9 @@ import axios from "axios";
                         <Typography class="numeros">{dados.ordensFinalizadas}</Typography>
                     </Paper>
                 </Grid>
-
-                <Grid item xs={12} md={4}>
-                    <Paper sx={{ p: 2 }}>
-                        <Typography class="texto">Produtos</Typography>
-                        <Typography class="numeros">{dados.produtos}</Typography>
-                    </Paper>
-                </Grid>
             </Grid>
         </>
     );
-  }
+}
 
 

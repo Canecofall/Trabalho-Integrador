@@ -6,10 +6,11 @@ import "./componentes/tema/Style.css";
 import { Box } from "@mui/material";
 import Dashboard from "./componentes/paginas/dashboard/dashboard.jsx";
 import OrdemDeServico from "./componentes/paginas/cadastros/ordens_de_serviço.jsx";
-import EquipamentosCatalogo from "./componentes/paginas/catalogos/equpamentos_catalogos.jsx";
 import OrdensDeServicoCatalogo from "./componentes/paginas/catalogos/ordens_de_serviço_catalogo.jsx";
 import ServicosCatalogo from "./componentes/paginas/catalogos/serviços_catalogo.jsx";
 import Servico from "./componentes/paginas/cadastros/serviços.jsx";
+import EquipamentosCatalogo from "./componentes/paginas/catalogos/equpamentos_catalogos.jsx";
+import EquipamentoArmazenado from "./componentes/paginas/cadastros/equipamento.jsx";
 
 export default function App() {
   const [permissoes, setPermissoes] = useState([]);
@@ -18,6 +19,7 @@ export default function App() {
   const [telaAtual, setTelaAtual] = useState("dashboard");
   const [ordemSelecionada, setOrdemSelecionada] = useState(null);
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
+  const [EquipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
 
   const trocarTela = (novaTela, id = null) => {
     setTelaAtual(novaTela);
@@ -26,6 +28,9 @@ export default function App() {
     }
     if (novaTela.includes("Servico")) {
       setServicoSelecionado(id);
+    }
+    if (novaTela.includes("Equipamento")) {
+      setEquipamentoSelecionado(id);
     }
   };
 
@@ -113,8 +118,10 @@ export default function App() {
     <>
       <Menu_ini trocarTela={trocarTela} onLogout={handleLogout} />
       {telaAtual === "dashboard" && <Dashboard />}
-      {telaAtual === "equipamentos" && <EquipamentosCatalogo />}
-      {telaAtual === "servicos" && <ServicosCatalogo trocarTela={trocarTela} />}
+      {telaAtual === "equipamentos" && (
+        <EquipamentosCatalogo trocarTela={trocarTela} />)}
+      {telaAtual === "servicos" && (
+        <ServicosCatalogo trocarTela={trocarTela} />)}
       {telaAtual === "ordens" && (
         <OrdensDeServicoCatalogo trocarTela={trocarTela} />
       )}
@@ -132,6 +139,15 @@ export default function App() {
           trocarTela={trocarTela}
         />
       )}
+      {(telaAtual === "verEquipamento" || telaAtual === "editarEquipamento" || telaAtual === "criarEquipamento") && (
+        <EquipamentoArmazenado
+          equipamentoId={EquipamentoSelecionado}
+          modo={telaAtual}
+          trocarTela={trocarTela}
+        />
+      )}
+
+
     </>
   );
 }

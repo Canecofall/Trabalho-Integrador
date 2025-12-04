@@ -21,7 +21,7 @@ const mockServicos = [
   { id: 3, nome: "Limpeza interna e troca de pasta térmica", preco: 120 },
 ];
 
-export default function ServicosCatalogo({ trocarTela }) {
+export default function servico_catalogo({ trocarTela }) {
   const [servicos, setServicos] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
