@@ -4,16 +4,26 @@ import Login from "./componentes/paginas/login/login.jsx";
 import Menu_ini from "./componentes/paginas/menu_ini/menu_principal.jsx";
 import "./componentes/tema/Style.css";
 import { Box } from "@mui/material";
+import Dashboard from "./componentes/paginas/dashboard/dashboard.jsx";
+import OrdemDeServico from "./componentes/paginas/cadastros/ordens_de_serviço.jsx";
 import EquipamentosCatalogo from "./componentes/paginas/catalogos/equpamentos_catalogos.jsx";
 import OrdensDeServicoCatalogo from "./componentes/paginas/catalogos/ordens_de_serviço_catalogo.jsx";
 import ServicosCatalogo from "./componentes/paginas/catalogos/serviços_catalogo.jsx";
-import Dashboard from "./componentes/paginas/dashboard/dashboard.jsx";
+
 
 export default function App() {
   const [permissoes, setPermissoes] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [telaAtual, setTelaAtual] = useState("dashboard");
+  const [ordemSelecionada, setOrdemSelecionada] = useState(null);
+
+  const trocarTela = (novaTela, ordemId = null) => {
+    setTelaAtual(novaTela);
+    setOrdemSelecionada(ordemId);
+  };
+
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
@@ -76,7 +86,6 @@ export default function App() {
   const handleLogin = (success, username = null) => {
     if (success) {
       if (username) setUserEmail(username);
-
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
@@ -85,7 +94,7 @@ export default function App() {
     }
   };
 
-  // Se não estiver logado → mostra login
+
   if (!isLoggedIn) {
     return (
       <Box id="bg">
@@ -94,14 +103,22 @@ export default function App() {
     );
   }
 
-  // Tela logada
   return (
     <>
-      <Menu_ini trocarTela={setTelaAtual} onLogout={handleLogout} />
+      <Menu_ini trocarTela={trocarTela} onLogout={handleLogout} />
       {telaAtual === "dashboard" && <Dashboard />}
       {telaAtual === "equipamentos" && <EquipamentosCatalogo />}
-      {telaAtual === "ordens" && <OrdensDeServicoCatalogo />}
       {telaAtual === "servicos" && <ServicosCatalogo />}
+      {telaAtual === "ordens" && (
+        <OrdensDeServicoCatalogo trocarTela={trocarTela} />
+      )}
+      {(telaAtual === "verOrdem" || telaAtual === "editarOrdem" || telaAtual === "criarOrdem") && (
+        <OrdemDeServico
+          ordemId={ordemSelecionada}
+          modo={telaAtual}
+          trocarTela={trocarTela}
+        />
+      )}
     </>
   );
 

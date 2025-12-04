@@ -58,7 +58,6 @@ export default function Menu_ini({ trocarTela, onLogout }) {
               <ListItemText primary="Serviços" />
             </ListItem>
 
-            {/* 🚪 Item de Logout */}
             <ListItem
               button
               onClick={() => {
