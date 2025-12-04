@@ -23,9 +23,8 @@ import axios from "axios";
 
                 // Mock temporário para testes
                 setDados({
-                    usuariosAtivos: 0,
+                    total_de_ordens: 0,
                     ordensFinalizadas: 0,
-                    produtos: 0,
                 });
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
@@ -48,8 +47,8 @@ import axios from "axios";
             <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
                     <Paper sx={{ p: 2 }}>
-                        <Typography class="texto">Usuários Ativos</Typography>
-                        <Typography class="numeros">{dados.usuariosAtivos}</Typography>
+                        <Typography class="texto">Total de ordens de serviço</Typography>
+                        <Typography class="numeros">{dados.total_de_ordens}</Typography>
                     </Paper>
                 </Grid>
 
