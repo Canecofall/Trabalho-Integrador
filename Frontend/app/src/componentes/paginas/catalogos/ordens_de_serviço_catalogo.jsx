@@ -55,6 +55,18 @@ export default function ordens_de_servico_catalogo({ trocarTela }) {
         // axios.put(`http://localhost:3002/ordens/${id}`, { status: novoStatus })
     };
 
+    const handleDelete = (id) => {
+        if (window.confirm("Tem certeza que deseja excluir esta ordem de serviço?")) {
+            // Se for mock:
+            setOrdens(ordens.filter((ordem) => ordem.id !== id));
+
+            // Se for backend:
+            // axios.delete(`http://localhost:3002/ordens/${id}`)
+            //   .then(() => setOrdens(ordens.filter((ordem) => ordem.id !== id)))
+            //   .catch(err => console.error(err));
+        }
+    };
+
     return (
         <Box sx={{ p: 3 }}>
             {/* Barra de pesquisa */}
@@ -110,6 +122,13 @@ export default function ordens_de_servico_catalogo({ trocarTela }) {
                                             onClick={() => trocarTela("editarOrdem", ordem.id)}
                                         >
                                             Editar
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() => handleDelete(ordem.id)}
+                                        >
+                                            Deletar
                                         </Button>
                                     </Stack>
                                 </TableCell>

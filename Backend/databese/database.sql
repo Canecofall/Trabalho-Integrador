@@ -24,10 +24,6 @@ CREATE TABLE usuario_permissao
       REFERENCES permissao (id)
 );
 
--- INSERE PERMISSAO ANTES DE TUDO
-INSERT INTO permissao (id, descricao) 
-VALUES (1, 'VISUALIZAR_ALUNOS');
-
 -- INSERE USUARIOS
 INSERT INTO usuario (email, nome, senha) 
 VALUES ('admin@outlook.com', 'Administrador', 'admin');
@@ -35,6 +31,14 @@ VALUES ('admin@outlook.com', 'Administrador', 'admin');
 INSERT INTO usuario (email, nome, senha) 
 VALUES ('user@outlook.com', 'Usuario', 'user');
 
+-- INSERE PERMISSAO ANTES DE TUDO
+INSERT INTO permissao (id, descricao) 
+VALUES (1, 'SOMENTE_VER');
+VALUES (2, 'EDITAR');
+VALUES (3, 'CRIAR');
+VALUES (4, 'DELETAR');
+
+
 -- INSERE RELACIONAMENTO
 INSERT INTO usuario_permissao (email, id_permissao) 
-VALUES ('admin@outlook.com', 1);
+VALUES ('usuario@outlook.com', 1);

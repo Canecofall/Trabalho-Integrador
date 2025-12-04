@@ -36,6 +36,17 @@ export default function servico_catalogo({ trocarTela }) {
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
+  const handleDelete = (id) => {
+    if (window.confirm("Tem certeza que deseja excluir este serviço?")) {
+      // Se for mock:
+      setServicos(servicos.filter((s) => s.id !== id));
+
+      // Se for backend:
+      // axios.delete(`http://localhost:3002/servicos/${id}`)
+      //   .then(() => setServicos(servicos.filter((s) => s.id !== id)))
+      //   .catch(err => console.error(err));
+    }
+  };
 
   return (
     <Box sx={{ p: 3 }}>
@@ -75,7 +86,13 @@ export default function servico_catalogo({ trocarTela }) {
                     >
                       Editar
                     </Button>
-
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleDelete(s.id)}
+                    >
+                      Deletar
+                    </Button>
                   </Stack>
                 </TableCell>
               </TableRow>

@@ -28,6 +28,17 @@ export default function EquipamentosCatalogo({ trocarTela }) {
       { id: 3, cliente: "Carlos Lima", equipamento: "Servidor IBM", modelo: "X3650" },
     ]);
   }, []);
+  const handleDelete = (id) => {
+    if (window.confirm("Tem certeza que deseja excluir este equipamento?")) {
+      // Se for mock:
+      setEquipamentos(equipamentos.filter((eq) => eq.id !== id));
+
+      // Se for backend:
+      // axios.delete(`http://localhost:3002/equipamentos/${id}`)
+      //   .then(() => setEquipamentos(equipamentos.filter((eq) => eq.id !== id)))
+      //   .catch(err => console.error(err));
+    }
+  };
 
   // Filtra equipamentos pela pesquisa
   const equipamentosFiltrados = equipamentos.filter(
@@ -89,6 +100,13 @@ export default function EquipamentosCatalogo({ trocarTela }) {
                       onClick={() => trocarTela("editarEquipamento", eq.id)}
                     >
                       Editar
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleDelete(eq.id)}
+                    >
+                      Deletar
                     </Button>
                   </Stack>
                 </TableCell>
