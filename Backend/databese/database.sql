@@ -33,7 +33,7 @@ VALUES ('user@outlook.com', 'Usuario', 'user');
 
 -- INSERE PERMISSAO ANTES DE TUDO
 INSERT INTO permissao (id, descricao) 
-VALUES (1, 'SOMENTE_VER');
+VALUES (1, 'VER');
 VALUES (2, 'EDITAR');
 VALUES (3, 'CRIAR');
 VALUES (4, 'DELETAR');
@@ -42,3 +42,7 @@ VALUES (4, 'DELETAR');
 -- INSERE RELACIONAMENTO
 INSERT INTO usuario_permissao (email, id_permissao) 
 VALUES ('usuario@outlook.com', 1);
+VALUES ('admin@outlook.com', 1);
+VALUES ('admin@outlook.com', 2);
+VALUES ('admin@outlook.com', 3);
+VALUES ('admin@outlook.com', 4);

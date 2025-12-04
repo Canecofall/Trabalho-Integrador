@@ -43,5 +43,16 @@ authRouter.post("/novoUsuario", async (req, res) => {
 	}
 });
 
-module.exports = authRouter;
+// GET /validar-token - Verifica se o token JWT é válido
+authRouter.get(
+  "/validar-token",
+  authService.requireJWTAuth, // middleware que valida o token
+  (req, res) => {
+    res.json({
+      valido: true,
+      usuario: req.user, // usuário injetado pelo passport-jwt
+    });
+  }
+);
 
+module.exports = authRouter;

@@ -37,7 +37,7 @@ export default function App() {
       setEquipamentoSelecionado(id);
     }
   };
-	const podeVisualizarCursos = permissoes.some(permissao => permissao.Permissao.descricao === "SOMENTE_VER");
+	//	const podeVerTabela = permissoes.some(permissao => permissao.Permissao.descricao === "VER");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
