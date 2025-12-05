@@ -1,11 +1,10 @@
 
 //GET http://localhost:3002/aluno/todos
 
-POST http://localhost:3002/novoUsuario
+POST http://localhost:3002/usuario_permissao/
 Content-Type: application/json
 
 {
-    "username": "usuario@outlook.com",
-    "passwd": "usuario",
-    "nome": "usuario"
+  "email": "usuario@outlook.com",
+  "id_permissao": 2
 }

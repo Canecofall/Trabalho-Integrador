@@ -8,12 +8,13 @@ import {
   IconButton,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import "@/componentes/tema/Style.css"
 
 export default function Menu_ini({ trocarTela, onLogout }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Box sx={{ flexGrow: 1, p: 3 }}>
+    <Box id="bg" sx={{ flexGrow: 1, p: 3 }}>
       <IconButton onClick={() => setOpen(true)}>
         <MenuIcon />
       </IconButton>

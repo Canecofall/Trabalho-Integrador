@@ -7,7 +7,7 @@ import { Box } from "@mui/material";
 import Dashboard from "./componentes/paginas/dashboard/dashboard.jsx";
 import OrdemDeServico from "./componentes/paginas/cadastros/ordens_de_serviço.jsx";
 import OrdensDeServicoCatalogo from "./componentes/paginas/catalogos/ordens_de_serviço_catalogo.jsx";
-import ServicosCatalogo from "./componentes/paginas/catalogos/serviços_catalogo.jsx";
+import ServicoCatalogo from "./componentes/paginas/catalogos/serviços_catalogo.jsx";
 import Servico from "./componentes/paginas/cadastros/serviços.jsx";
 import EquipamentosCatalogo from "./componentes/paginas/catalogos/equpamentos_catalogos.jsx";
 import EquipamentoArmazenado from "./componentes/paginas/cadastros/equipamento.jsx";
@@ -20,6 +20,7 @@ export default function App() {
   const [ordemSelecionada, setOrdemSelecionada] = useState(null);
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
   const [EquipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
+
   const telasSemMenu = [
     "verOrdem", "editarOrdem", "criarOrdem",
     "verServico", "editarServico", "criarServico",
@@ -37,7 +38,6 @@ export default function App() {
       setEquipamentoSelecionado(id);
     }
   };
-	//	const podeVerTabela = permissoes.some(permissao => permissao.Permissao.descricao === "VER");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -72,6 +72,13 @@ export default function App() {
   };
 
   useEffect(() => {
+    // Busca permissões quando o usuário estiver logado e tiver email
+    if (isLoggedIn && userEmail) {
+      buscarPermissoesPorEmail(userEmail);
+    }
+  }, [isLoggedIn, userEmail]);
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -88,29 +95,23 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (isLoggedIn && userEmail) {
-      buscarPermissoesPorEmail(userEmail);
-    }
-  }, [isLoggedIn, userEmail]);
-
-  useEffect(() => {
+    // Verifica se há token no localStorage ao carregar
     const token = localStorage.getItem("token");
     if (token) {
-      axios.get("http://localhost:3002/validar-token", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(res => {
-          setUserEmail(res.data.username);
+      // Tenta decodificar o token para obter o email do usuário
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload.username) {
+          setUserEmail(payload.username);
           setIsLoggedIn(true);
-        })
-        .catch(() => {
-          localStorage.removeItem("token");
-          setIsLoggedIn(false);
-        });
+        }
+      } catch (error) {
+        console.error("Erro ao decodificar token:", error);
+        localStorage.removeItem("token");
+      }
     }
   }, []);
 
-  
 
   if (!isLoggedIn) {
     return (
@@ -127,11 +128,11 @@ export default function App() {
       )}
       {telaAtual === "dashboard" && <Dashboard />}
       {telaAtual === "equipamentos" && (
-        <EquipamentosCatalogo trocarTela={trocarTela} />)}
+        <EquipamentosCatalogo trocarTela={trocarTela} permissoes={permissoes}/>)}
       {telaAtual === "servicos" && (
-        <ServicosCatalogo trocarTela={trocarTela} />)}
+        <ServicoCatalogo trocarTela={trocarTela} permissoes={permissoes}/>)}
       {telaAtual === "ordens" && (
-        <OrdensDeServicoCatalogo trocarTela={trocarTela} />
+        <OrdensDeServicoCatalogo trocarTela={trocarTela} permissoes={permissoes} />
       )}
       {(telaAtual === "verOrdem" || telaAtual === "editarOrdem" || telaAtual === "criarOrdem") && (
         <OrdemDeServico
@@ -154,8 +155,6 @@ export default function App() {
           trocarTela={trocarTela}
         />
       )}
-
-
     </>
   );
 }

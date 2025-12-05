@@ -40,25 +40,27 @@ import axios from "axios";
 
     return(
         <>
-            <Typography class="texto" gutterBottom>
+            <div id="bg_dashboard">
+                <Typography className="texto" gutterBottom>
                 Dashboard
             </Typography>
 
             <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
                     <Paper sx={{ p: 2 }}>
-                        <Typography class="texto">Total de ordens de serviço</Typography>
-                        <Typography class="numeros">{dados.total_de_ordens}</Typography>
+                        <Typography className="texto">nº de ordens de serviço</Typography>
+                        <Typography className="numeros">{dados.total_de_ordens}</Typography>
                     </Paper>
                 </Grid>
 
                 <Grid item xs={12} md={4}>
                     <Paper sx={{ p: 2 }}>
-                        <Typography class="texto">Ordens Finalizadas</Typography>
-                        <Typography class="numeros">{dados.ordensFinalizadas}</Typography>
+                        <Typography className="texto">Ordens Finalizadas</Typography>
+                        <Typography className="numeros">{dados.ordensFinalizadas}</Typography>
                     </Paper>
                 </Grid>
             </Grid>
+            </div>
         </>
     );
   }

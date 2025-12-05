@@ -14,33 +14,31 @@ import {
   TablePagination,
 } from "@mui/material";
 
-export default function EquipamentosCatalogo({ trocarTela }) {
+export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
   const [equipamentos, setEquipamentos] = useState([]);
   const [pesquisa, setPesquisa] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const podeVer = permissoes.includes("VER");
+  const podeEditar = permissoes.includes("EDITAR");
+  const podeDeletar = permissoes.includes("DELETAR");
+  const podeCriar = permissoes.includes("CRIAR");
+
   useEffect(() => {
-    // Mock temporário
     setEquipamentos([
       { id: 1, cliente: "João Silva", equipamento: "Notebook Dell", modelo: "Inspiron 15" },
       { id: 2, cliente: "Maria Souza", equipamento: "Impressora HP", modelo: "Deskjet 2136" },
       { id: 3, cliente: "Carlos Lima", equipamento: "Servidor IBM", modelo: "X3650" },
     ]);
   }, []);
+
   const handleDelete = (id) => {
     if (window.confirm("Tem certeza que deseja excluir este equipamento?")) {
-      // Se for mock:
       setEquipamentos(equipamentos.filter((eq) => eq.id !== id));
-
-      // Se for backend:
-      // axios.delete(`http://localhost:3002/equipamentos/${id}`)
-      //   .then(() => setEquipamentos(equipamentos.filter((eq) => eq.id !== id)))
-      //   .catch(err => console.error(err));
     }
   };
 
-  // Filtra equipamentos pela pesquisa
   const equipamentosFiltrados = equipamentos.filter(
     (eq) =>
       eq.id.toString().includes(pesquisa) ||
@@ -48,15 +46,14 @@ export default function EquipamentosCatalogo({ trocarTela }) {
       eq.equipamento.toLowerCase().includes(pesquisa.toLowerCase())
   );
 
-  // Dados paginados
   const equipamentosPaginados = equipamentosFiltrados.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
 
   return (
-    <Box sx={{ p: 3 }}>
-      {/* Barra de pesquisa */}
+   <div id="bg">
+     <Box sx={{ p: 3 }}>
       <TextField
         label="Pesquisar por Nº ou Cliente/Equipamento"
         variant="outlined"
@@ -66,7 +63,6 @@ export default function EquipamentosCatalogo({ trocarTela }) {
         onChange={(e) => setPesquisa(e.target.value)}
       />
 
-      {/* Tabela */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -87,27 +83,35 @@ export default function EquipamentosCatalogo({ trocarTela }) {
                 <TableCell>{eq.modelo}</TableCell>
                 <TableCell>
                   <Stack direction="row" spacing={1}>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => trocarTela("verEquipamento", eq.id)}
-                    >
-                      Ver
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="warning"
-                      onClick={() => trocarTela("editarEquipamento", eq.id)}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => handleDelete(eq.id)}
-                    >
-                      Deletar
-                    </Button>
+                    {podeVer && (
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => trocarTela("verEquipamento", eq.id)}
+                      >
+                        Ver
+                      </Button>
+                    )}
+
+                    {podeEditar && (
+                      <Button
+                        variant="outlined"
+                        color="warning"
+                        onClick={() => trocarTela("editarEquipamento", eq.id)}
+                      >
+                        Editar
+                      </Button>
+                    )}
+
+                    {podeDeletar && (
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => handleDelete(eq.id)}
+                      >
+                        Deletar
+                      </Button>
+                    )}
                   </Stack>
                 </TableCell>
               </TableRow>
@@ -116,7 +120,6 @@ export default function EquipamentosCatalogo({ trocarTela }) {
         </Table>
       </TableContainer>
 
-      {/* Paginação */}
       <TablePagination
         component="div"
         count={equipamentosFiltrados.length}
@@ -130,16 +133,18 @@ export default function EquipamentosCatalogo({ trocarTela }) {
         labelRowsPerPage="Registros por página"
       />
 
-      {/* Botões de ação */}
       <Stack direction="row-reverse" spacing={2} sx={{ mt: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => trocarTela("criarEquipamento")}
-        >
-          Cadastrar Equipamento
-        </Button>
+        {podeCriar && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => trocarTela("criarEquipamento")}
+          >
+            Cadastrar Equipamento
+          </Button>
+        )}
       </Stack>
     </Box>
+   </div>
   );
 }

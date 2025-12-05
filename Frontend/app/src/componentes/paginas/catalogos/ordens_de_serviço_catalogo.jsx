@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from "react";
 import {
-    Box,
-    TextField,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Button,
-    Stack,
-    TablePagination,
-    Select,
-    MenuItem,
+    Box, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Stack, TablePagination, Select, MenuItem,
 } from "@mui/material";
+import "@/componentes/tema/Style.css"
 
-export default function ordens_de_servico_catalogo({ trocarTela }) {
+export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
     const [ordens, setOrdens] = useState([]);
     const [pesquisa, setPesquisa] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const podeVerOrdem = permissoes.includes("VER");
+    const podeEditar = permissoes.includes("EDITAR");
+    const podeDeletar = permissoes.includes("DELETAR");
+    const podeCriar = permissoes.includes("CRIAR");
 
     useEffect(() => {
         // Mock temporário
@@ -68,7 +61,8 @@ export default function ordens_de_servico_catalogo({ trocarTela }) {
     };
 
     return (
-        <Box sx={{ p: 3 }}>
+        <div id="bg">
+            <Box sx={{ p: 3 }}>
             {/* Barra de pesquisa */}
             <TextField
                 label="Pesquisar por Nº Ordem ou Cliente"
@@ -109,27 +103,35 @@ export default function ordens_de_servico_catalogo({ trocarTela }) {
                                 </TableCell>
                                 <TableCell>
                                     <Stack direction="row" spacing={1}>
-                                        <Button
-                                            variant="outlined"
-                                            color="secondary"
-                                            onClick={() => trocarTela("verOrdem", ordem.id)}
-                                        >
-                                            Ver
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            color="warning"
-                                            onClick={() => trocarTela("editarOrdem", ordem.id)}
-                                        >
-                                            Editar
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            color="error"
-                                            onClick={() => handleDelete(ordem.id)}
-                                        >
-                                            Deletar
-                                        </Button>
+                                        {podeVerOrdem && (
+                                            <Button
+                                                variant="outlined"
+                                                color="secondary"
+                                                onClick={() => trocarTela("verOrdem", ordem.id)}
+                                            >
+                                                Ver
+                                            </Button>
+                                        )}
+
+                                        {podeEditar && (
+                                            <Button
+                                                variant="outlined"
+                                                color="warning"
+                                                onClick={() => trocarTela("editarOrdem", ordem.id)}
+                                            >
+                                                Editar
+                                            </Button>
+                                        )}
+
+                                        {podeDeletar && (
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                onClick={() => handleDelete(ordem.id)}
+                                            >
+                                                Deletar
+                                            </Button>
+                                        )}
                                     </Stack>
                                 </TableCell>
                             </TableRow>
@@ -155,15 +157,19 @@ export default function ordens_de_servico_catalogo({ trocarTela }) {
             />
 
             {/* Botões de ação */}
-            <Stack direction="row-reverse" spacing={2} sx={{ mt: 2 }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => trocarTela("criarOrdem")}
-                >
-                    Criar
-                </Button>
-            </Stack>
+            {/* Botão para criar novo serviço */}
+            {podeCriar && (
+                <Stack direction="row-reverse" sx={{ mt: 2 }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => trocarTela("criarServico")}
+                    >
+                        Criar Serviço
+                    </Button>
+                </Stack>
+            )}
         </Box>
+        </div>
     );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
-import "./login.css";
 import { Alert, Box, Button, Snackbar, Stack, TextField } from "@mui/material";
+import "@/componentes/tema/Style.css"
 
 export default function Login({ handleLogin }) {
 	const [username, setUsername] = React.useState("");
@@ -12,7 +12,7 @@ export default function Login({ handleLogin }) {
 	const [messageSeverity, setMessageSeverity] = React.useState("success");
 
 	// const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
+	
 	async function enviaLogin(event) {
 		event.preventDefault();
 		try {
@@ -59,74 +59,74 @@ export default function Login({ handleLogin }) {
 
 	return (
 		<>
-		<div id="bg">
-			<Box id="bg">
-				<h1 id="titulo-login">login</h1>
-			<Stack spacing={2}>
-				<Stack spacing={2}>
-					<TextField
-						required
-						id="username-input"
-						label="Email"
-						size="small"
-						value={username}
-						onChange={(event) => {
-							setUsername(event.target.value);
-						}}
-					/>
-					<TextField
-						required
-						id="passwd-input"
-						label="Senha"
-						type="password"
-						size="small"
-						value={passwd}
-						onChange={(event) => {
-							setPasswd(event.target.value);
-						}}
-					/>
-				</Stack>
-				<Stack direction="row" spacing={3}>
-					<Button
+			<div id="bg">
+				<Box id="bg_login">
+					<h1 className="titulo-login">login</h1>
+					<Stack spacing={2}>
+						<Stack spacing={2}>
+							<TextField
+								required
+								id="username-input"
+								label="Email"
+								size="small"
+								value={username}
+								onChange={(event) => {
+									setUsername(event.target.value);
+								}}
+							/>
+							<TextField
+								required
+								id="passwd-input"
+								label="Senha"
+								type="password"
+								size="small"
+								value={passwd}
+								onChange={(event) => {
+									setPasswd(event.target.value);
+								}}
+							/>
+						</Stack>
+						<Stack direction="row" spacing={3}>
+							<Button
 
-						variant="outlined"
-						style={{
-							maxWidth: "100px",
-							minWidth: "100px",
-						}}
-						color="error"
-						onClick={cancelaLogin}
-					>
-						Cancelar
-						
-					</Button>
-					<Button
-						variant="contained"
-						style={{
-							maxWidth: "100px",
-							minWidth: "100px",
-						}}
-						color="primary"
-						onClick={enviaLogin}
-					>
-						Enviar
-					</Button>
-				</Stack>
-				<Snackbar
-					open={openMessage}
-					autoHideDuration={6000}
-					onClose={handleCloseMessage}
-				>
-					<Alert
-						severity={messageSeverity}
-						onClose={handleCloseMessage}
-					>
-						{messageText}
-					</Alert>
-				</Snackbar>
-			</Stack>
-		</Box>
-		</div>
+								variant="outlined"
+								style={{
+									maxWidth: "100px",
+									minWidth: "100px",
+								}}
+								color="error"
+								onClick={cancelaLogin}
+							>
+								Cancelar
+
+							</Button>
+							<Button
+								variant="contained"
+								style={{
+									maxWidth: "100px",
+									minWidth: "100px",
+								}}
+								color="primary"
+								onClick={enviaLogin}
+							>
+								Enviar
+							</Button>
+						</Stack>
+						<Snackbar
+							open={openMessage}
+							autoHideDuration={6000}
+							onClose={handleCloseMessage}
+						>
+							<Alert
+								severity={messageSeverity}
+								onClose={handleCloseMessage}
+							>
+								{messageText}
+							</Alert>
+						</Snackbar>
+					</Stack>
+				</Box>
+			</div>
 		</>
 	);
 }
