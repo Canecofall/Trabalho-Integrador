@@ -47,18 +47,27 @@ export default function App() {
   };
 
   const buscarPermissoesPorEmail = async (email) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `http://localhost:3002/usuario_permissao/usuario/${email}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      `http://localhost:3002/usuario_permissao/usuario/${email}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      setPermissoes(response.data.permissoes);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    // --- CONVERSÃO CORRETA ---
+    const lista = response.data.permissoes.map(
+      (p) => p.Permissao.descricao
+    );
+
+    console.log("Permissões convertidas:", lista);
+    
+    setPermissoes(lista); // <<<<<<<<<< AGORA SIM
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
   const handleLogin = (success, username = null) => {
     if (success) {
@@ -70,6 +79,9 @@ export default function App() {
       localStorage.removeItem("token");
     }
   };
+  useEffect(() => {
+    console.log("Permissões recebidas:", permissoes);
+  }, [permissoes]);
 
   useEffect(() => {
     // Busca permissões quando o usuário estiver logado e tiver email
@@ -123,14 +135,15 @@ export default function App() {
 
   return (
     <>
+    
       {!telasSemMenu.includes(telaAtual) && (
         <Menu_ini trocarTela={trocarTela} onLogout={handleLogout} />
       )}
       {telaAtual === "dashboard" && <Dashboard />}
       {telaAtual === "equipamentos" && (
-        <EquipamentosCatalogo trocarTela={trocarTela} permissoes={permissoes}/>)}
+        <EquipamentosCatalogo trocarTela={trocarTela} permissoes={permissoes} />)}
       {telaAtual === "servicos" && (
-        <ServicoCatalogo trocarTela={trocarTela} permissoes={permissoes}/>)}
+        <ServicoCatalogo trocarTela={trocarTela} permissoes={permissoes} />)}
       {telaAtual === "ordens" && (
         <OrdensDeServicoCatalogo trocarTela={trocarTela} permissoes={permissoes} />
       )}

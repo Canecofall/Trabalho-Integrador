@@ -25,11 +25,15 @@ CREATE TABLE usuario_permissao
 );
 
 -- INSERE USUARIOS
+--usuario admin@outlook.com
+--senha   Administrador
 INSERT INTO usuario (email, nome, senha) 
-VALUES ('admin@outlook.com', 'Administrador', 'admin');
+VALUES ('admin@outlook.com', 'Administrador', '"$2b$10$mHBljwcXFAHfT73HXh5FZOZsgsqmiBGrLALB3qJhSzJ3CLCqWoN8K"');
 
+--usuario usuario@outlook.com
+--senha   usuario
 INSERT INTO usuario (email, nome, senha) 
-VALUES ('user@outlook.com', 'Usuario', 'user');
+VALUES ('usuario@outlook.com', 'usuario', '$2b$10$V1OXzHqOoG0QJSfN3Iqp6.IXJ5/QVHIAsjBFeA9DVWdrVv1Fyod0u');
 
 -- INSERE PERMISSAO ANTES DE TUDO
 INSERT INTO permissao (id, descricao) 

@@ -9,11 +9,10 @@ export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
     const [pesquisa, setPesquisa] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
-    const podeVerOrdem = permissoes.includes("VER");
-    const podeEditar = permissoes.includes("EDITAR");
-    const podeDeletar = permissoes.includes("DELETAR");
-    const podeCriar = permissoes.includes("CRIAR");
+const podeVer = permissoes.includes("VER");
+const podeEditar = permissoes.includes("EDITAR");
+const podeDeletar = permissoes.includes("DELETAR");
+const podeCriar = permissoes.includes("CRIAR");
 
     useEffect(() => {
         // Mock temporário
@@ -103,7 +102,7 @@ export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
                                 </TableCell>
                                 <TableCell>
                                     <Stack direction="row" spacing={1}>
-                                        {podeVerOrdem && (
+                                        {podeVer && (
                                             <Button
                                                 variant="outlined"
                                                 color="secondary"

@@ -13,7 +13,7 @@ import {
   Stack,
   TablePagination,
 } from "@mui/material";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+
 // Mock de serviços
 const mockServicos = [
   { id: 1, nome: "Formatação de Notebook", preco: 150 },
@@ -31,12 +31,7 @@ export default function serviços_catalogo({ trocarTela, permissoes = [] }) {
   const podeEditar = permissoes.includes("EDITAR");
   const podeDeletar = permissoes.includes("DELETAR");
   const podeCriar = permissoes.includes("CRIAR");
-const theme = createTheme({
-  palette: {
-    primary: { main: "#1976d2" },
-    secondary: { main: "#9c27b0" },
-  },
-});
+
  const servicosFiltrados = servicos.filter(
   (s) =>
     s.id.toString().includes(pesquisa) ||

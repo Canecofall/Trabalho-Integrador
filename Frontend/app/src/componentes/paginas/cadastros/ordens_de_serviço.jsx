@@ -119,31 +119,40 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
       <Divider sx={{ mb: 2 }} />
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField fullWidth label="Nome" name="nome" value={ordem.nome} onChange={handleChange} />
+          <TextField fullWidth label="Nome" name="nome" value={ordem.nome} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="CPF/CNPJ" name="cpfCnpj" value={ordem.cpfCnpj} onChange={handleChange} />
+          <TextField fullWidth label="CPF/CNPJ" name="cpfCnpj" value={ordem.cpfCnpj} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Telefone" name="contato" value={ordem.contato} onChange={handleChange} />
+          <TextField fullWidth label="Telefone" name="contato" value={ordem.contato} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="E-mail" name="email" value={ordem.email} onChange={handleChange} />
+          <TextField fullWidth label="E-mail" name="email" value={ordem.email} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Contribuinte" name="contribuinte" value={ordem.contribuinte} onChange={handleChange} />
+          <TextField fullWidth label="Contribuinte" name="contribuinte" value={ordem.contribuinte} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="RG" name="rg" value={ordem.rg} onChange={handleChange} />
+          <TextField fullWidth label="RG" name="rg" value={ordem.rg} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Data de Nascimento" name="nascimento" value={ordem.nascimento} onChange={handleChange} />
+          <TextField fullWidth label="Data de Nascimento" name="nascimento" value={ordem.nascimento} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Inscrição Estadual" name="inscricaoEstadual" value={ordem.inscricaoEstadual} onChange={handleChange} />
+          <TextField fullWidth label="Inscrição Estadual" name="inscricaoEstadual" value={ordem.inscricaoEstadual} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="CEP" name="cep" value={ordem.cep} onChange={handleChange} />
+          <TextField fullWidth label="CEP" name="cep" value={ordem.cep} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
       </Grid> {/* Dados do Equipamento */}
       <Typography variant="subtitle1" sx={{ mt: 4, mb: 1 }}>
@@ -152,24 +161,31 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
       <Divider sx={{ mb: 2 }} />
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField fullWidth label="Equipamento" name="equipamento" value={ordem.equipamento} onChange={handleChange} />
+          <TextField fullWidth label="Equipamento" name="equipamento" value={ordem.equipamento} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Marca" name="marca" value={ordem.marca} onChange={handleChange} />
+          <TextField fullWidth label="Marca" name="marca" value={ordem.marca} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Problema Técnico" name="defeito" value={ordem.defeito} onChange={handleChange} />
+          <TextField fullWidth label="Problema Técnico" name="defeito" value={ordem.defeito} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid> <Grid item xs={12}>
-          <TextField fullWidth label="Periféricos (carregador, teclado...)" name="perifericos" value={ordem.perifericos} onChange={handleChange} />
+          <TextField fullWidth label="Periféricos (carregador, teclado...)" name="perifericos" value={ordem.perifericos} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Senha" name="senha" value={ordem.senha} onChange={handleChange} />
+          <TextField fullWidth label="Senha" name="senha" value={ordem.senha} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Nº de Série" name="numeroSerie" value={ordem.numeroSerie} onChange={handleChange} />
+          <TextField fullWidth label="Nº de Série" name="numeroSerie" value={ordem.numeroSerie} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth label="Modelo" name="modelo" value={ordem.modelo} onChange={handleChange} />
+          <TextField fullWidth label="Modelo" name="modelo" value={ordem.modelo} onChange={handleChange} disabled={modo === "verOrdem"}
+          />
         </Grid>
       </Grid>{modo !== "verOrdem" && (
         <>
