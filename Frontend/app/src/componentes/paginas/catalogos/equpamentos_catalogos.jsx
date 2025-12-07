@@ -20,10 +20,11 @@ export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const podeVer = permissoes.includes("VER");
-  const podeEditar = permissoes.includes("EDITAR");
-  const podeDeletar = permissoes.includes("DELETAR");
-  const podeCriar = permissoes.includes("CRIAR");
+  //permisoes
+  const podeVer = permissoes.some(permissao => permissao.Permissao.descricao === "VER");
+  const podeEditar = permissoes.some(permissao => permissao.Permissao.descricao === "EDITAR");
+  const podeDeletar = permissoes.some(permissao => permissao.Permissao.descricao === "DELETAR");
+  const podeCriar = permissoes.some(permissao => permissao.Permissao.descricao === "CRIAR");
 
   useEffect(() => {
     setEquipamentos([
@@ -52,99 +53,99 @@ export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
   );
 
   return (
-   <div id="bg">
-     <Box sx={{ p: 3 }}>
-      <TextField
-        label="Pesquisar por Nº ou Cliente/Equipamento"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={pesquisa}
-        onChange={(e) => setPesquisa(e.target.value)}
-      />
+    <div id="bg">
+      <Box sx={{ p: 3 }}>
+        <TextField
+          label="Pesquisar por Nº ou Cliente/Equipamento"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={pesquisa}
+          onChange={(e) => setPesquisa(e.target.value)}
+        />
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Nº</TableCell>
-              <TableCell>Cliente</TableCell>
-              <TableCell>Equipamento</TableCell>
-              <TableCell>Modelo</TableCell>
-              <TableCell>Ações</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {equipamentosPaginados.map((eq) => (
-              <TableRow key={eq.id}>
-                <TableCell>{eq.id}</TableCell>
-                <TableCell>{eq.cliente}</TableCell>
-                <TableCell>{eq.equipamento}</TableCell>
-                <TableCell>{eq.modelo}</TableCell>
-                <TableCell>
-                  <Stack direction="row" spacing={1}>
-                    {podeVer && (
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => trocarTela("verEquipamento", eq.id)}
-                      >
-                        Ver
-                      </Button>
-                    )}
-
-                    {podeEditar && (
-                      <Button
-                        variant="outlined"
-                        color="warning"
-                        onClick={() => trocarTela("editarEquipamento", eq.id)}
-                      >
-                        Editar
-                      </Button>
-                    )}
-
-                    {podeDeletar && (
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={() => handleDelete(eq.id)}
-                      >
-                        Deletar
-                      </Button>
-                    )}
-                  </Stack>
-                </TableCell>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Nº</TableCell>
+                <TableCell>Cliente</TableCell>
+                <TableCell>Equipamento</TableCell>
+                <TableCell>Modelo</TableCell>
+                <TableCell>Ações</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {equipamentosPaginados.map((eq) => (
+                <TableRow key={eq.id}>
+                  <TableCell>{eq.id}</TableCell>
+                  <TableCell>{eq.cliente}</TableCell>
+                  <TableCell>{eq.equipamento}</TableCell>
+                  <TableCell>{eq.modelo}</TableCell>
+                  <TableCell>
+                    <Stack direction="row" spacing={1}>
+                      {podeVer && (
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          onClick={() => trocarTela("verEquipamento", eq.id)}
+                        >
+                          Ver
+                        </Button>
+                      )}
 
-      <TablePagination
-        component="div"
-        count={equipamentosFiltrados.length}
-        page={page}
-        onPageChange={(event, newPage) => setPage(newPage)}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={(event) => {
-          setRowsPerPage(parseInt(event.target.value, 10));
-          setPage(0);
-        }}
-        labelRowsPerPage="Registros por página"
-      />
+                      {podeEditar && (
+                        <Button
+                          variant="outlined"
+                          color="warning"
+                          onClick={() => trocarTela("editarEquipamento", eq.id)}
+                        >
+                          Editar
+                        </Button>
+                      )}
 
-      <Stack direction="row-reverse" spacing={2} sx={{ mt: 2 }}>
-        {podeCriar && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => trocarTela("criarEquipamento")}
-          >
-            Cadastrar Equipamento
-          </Button>
-        )}
-      </Stack>
-    </Box>
-   </div>
+                      {podeDeletar && (
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={() => handleDelete(eq.id)}
+                        >
+                          Deletar
+                        </Button>
+                      )}
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <TablePagination
+          component="div"
+          count={equipamentosFiltrados.length}
+          page={page}
+          onPageChange={(event, newPage) => setPage(newPage)}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(parseInt(event.target.value, 10));
+            setPage(0);
+          }}
+          labelRowsPerPage="Registros por página"
+        />
+
+        <Stack direction="row-reverse" spacing={2} sx={{ mt: 2 }}>
+          {podeCriar && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => trocarTela("criarEquipamento")}
+            >
+              Cadastrar Equipamento
+            </Button>
+          )}
+        </Stack>
+      </Box>
+    </div>
   );
 }

@@ -9,10 +9,11 @@ export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
     const [pesquisa, setPesquisa] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-const podeVer = permissoes.includes("VER");
-const podeEditar = permissoes.includes("EDITAR");
-const podeDeletar = permissoes.includes("DELETAR");
-const podeCriar = permissoes.includes("CRIAR");
+    //permisoes
+    const podeVer = permissoes.some(permissao => permissao.Permissao.descricao === "VER");
+    const podeEditar = permissoes.some(permissao => permissao.Permissao.descricao === "EDITAR");
+    const podeDeletar = permissoes.some(permissao => permissao.Permissao.descricao === "DELETAR");
+    const podeCriar = permissoes.some(permissao => permissao.Permissao.descricao === "CRIAR");
 
     useEffect(() => {
         // Mock temporário
@@ -62,113 +63,113 @@ const podeCriar = permissoes.includes("CRIAR");
     return (
         <div id="bg">
             <Box sx={{ p: 3 }}>
-            {/* Barra de pesquisa */}
-            <TextField
-                label="Pesquisar por Nº Ordem ou Cliente"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={pesquisa}
-                onChange={(e) => setPesquisa(e.target.value)}
-            />
+                {/* Barra de pesquisa */}
+                <TextField
+                    label="Pesquisar por Nº Ordem ou Cliente"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={pesquisa}
+                    onChange={(e) => setPesquisa(e.target.value)}
+                />
 
-            {/* Tabela */}
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Nº Ordem</TableCell>
-                            <TableCell>Cliente</TableCell>
-                            <TableCell>Equipamento</TableCell>
-                            <TableCell>Status</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {ordensPaginadas.map((ordem) => (
-                            <TableRow key={ordem.id}>
-                                <TableCell>{ordem.id}</TableCell>
-                                <TableCell>{ordem.cliente}</TableCell>
-                                <TableCell>{ordem.equipamento}</TableCell>
-                                <TableCell>
-                                    <Select
-                                        value={ordem.status}
-                                        onChange={(e) => handleStatusChange(ordem.id, e.target.value)}
-                                        size="small"
-                                    >
-                                        <MenuItem value="Finalizada">Finalizada</MenuItem>
-                                        <MenuItem value="Em andamento">Em andamento</MenuItem>
-                                        <MenuItem value="Pendente">Pendente</MenuItem>
-                                    </Select>
-                                </TableCell>
-                                <TableCell>
-                                    <Stack direction="row" spacing={1}>
-                                        {podeVer && (
-                                            <Button
-                                                variant="outlined"
-                                                color="secondary"
-                                                onClick={() => trocarTela("verOrdem", ordem.id)}
-                                            >
-                                                Ver
-                                            </Button>
-                                        )}
-
-                                        {podeEditar && (
-                                            <Button
-                                                variant="outlined"
-                                                color="warning"
-                                                onClick={() => trocarTela("editarOrdem", ordem.id)}
-                                            >
-                                                Editar
-                                            </Button>
-                                        )}
-
-                                        {podeDeletar && (
-                                            <Button
-                                                variant="outlined"
-                                                color="error"
-                                                onClick={() => handleDelete(ordem.id)}
-                                            >
-                                                Deletar
-                                            </Button>
-                                        )}
-                                    </Stack>
-                                </TableCell>
+                {/* Tabela */}
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Nº Ordem</TableCell>
+                                <TableCell>Cliente</TableCell>
+                                <TableCell>Equipamento</TableCell>
+                                <TableCell>Status</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
+                        </TableHead>
+                        <TableBody>
+                            {ordensPaginadas.map((ordem) => (
+                                <TableRow key={ordem.id}>
+                                    <TableCell>{ordem.id}</TableCell>
+                                    <TableCell>{ordem.cliente}</TableCell>
+                                    <TableCell>{ordem.equipamento}</TableCell>
+                                    <TableCell>
+                                        <Select
+                                            value={ordem.status}
+                                            onChange={(e) => handleStatusChange(ordem.id, e.target.value)}
+                                            size="small"
+                                        >
+                                            <MenuItem value="Finalizada">Finalizada</MenuItem>
+                                            <MenuItem value="Em andamento">Em andamento</MenuItem>
+                                            <MenuItem value="Pendente">Pendente</MenuItem>
+                                        </Select>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Stack direction="row" spacing={1}>
+                                            {podeVer && (
+                                                <Button
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    onClick={() => trocarTela("verOrdem", ordem.id)}
+                                                >
+                                                    Ver
+                                                </Button>
+                                            )}
+
+                                            {podeEditar && (
+                                                <Button
+                                                    variant="outlined"
+                                                    color="warning"
+                                                    onClick={() => trocarTela("editarOrdem", ordem.id)}
+                                                >
+                                                    Editar
+                                                </Button>
+                                            )}
+
+                                            {podeDeletar && (
+                                                <Button
+                                                    variant="outlined"
+                                                    color="error"
+                                                    onClick={() => handleDelete(ordem.id)}
+                                                >
+                                                    Deletar
+                                                </Button>
+                                            )}
+                                        </Stack>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
 
 
-                </Table>
-            </TableContainer>
+                    </Table>
+                </TableContainer>
 
-            {/* Paginação */}
-            <TablePagination
-                component="div"
-                count={ordensFiltradas.length}
-                page={page}
-                onPageChange={(event, newPage) => setPage(newPage)}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={(event) => {
-                    setRowsPerPage(parseInt(event.target.value, 10));
-                    setPage(0);
-                }}
-                labelRowsPerPage="Registros por página"
-            />
+                {/* Paginação */}
+                <TablePagination
+                    component="div"
+                    count={ordensFiltradas.length}
+                    page={page}
+                    onPageChange={(event, newPage) => setPage(newPage)}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={(event) => {
+                        setRowsPerPage(parseInt(event.target.value, 10));
+                        setPage(0);
+                    }}
+                    labelRowsPerPage="Registros por página"
+                />
 
-            {/* Botões de ação */}
-            {/* Botão para criar novo serviço */}
-            {podeCriar && (
-                <Stack direction="row-reverse" sx={{ mt: 2 }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => trocarTela("criarServico")}
-                    >
-                        Criar Serviço
-                    </Button>
-                </Stack>
-            )}
-        </Box>
+                {/* Botões de ação */}
+                {/* Botão para criar novo serviço */}
+                {podeCriar && (
+                    <Stack direction="row-reverse" sx={{ mt: 2 }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => trocarTela("criarServico")}
+                        >
+                            Criar Serviço
+                        </Button>
+                    </Stack>
+                )}
+            </Box>
         </div>
     );
 }
