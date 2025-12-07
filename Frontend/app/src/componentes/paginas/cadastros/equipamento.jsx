@@ -81,16 +81,16 @@ export default function EquipamentoArmazenado({ equipamentoId, modo, trocarTela 
       </Typography>
       <Divider sx={{ mb: 2 }} />
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Nome do Cliente" name="nomeCliente" value={equipamento.nomeCliente} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="CPF/CNPJ" name="cpfCnpj" value={equipamento.cpfCnpj} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Telefone" name="contato" value={equipamento.contato} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="E-mail" name="email" value={equipamento.email} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
       </Grid>
@@ -101,31 +101,31 @@ export default function EquipamentoArmazenado({ equipamentoId, modo, trocarTela 
       </Typography>
       <Divider sx={{ mb: 2 }} />
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Equipamento" name="equipamento" value={equipamento.equipamento} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Marca" name="marca" value={equipamento.marca} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Modelo" name="modelo" value={equipamento.modelo} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Nº de Série" name="numeroSerie" value={equipamento.numeroSerie} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Defeito Relatado" name="defeito" value={equipamento.defeito} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Periféricos" name="perifericos" value={equipamento.perifericos} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Senha" name="senha" value={equipamento.senha} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Data de Entrada" name="dataEntrada" value={equipamento.dataEntrada} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField fullWidth label="Observações" name="observacoes" value={equipamento.observacoes} onChange={handleChange} disabled={modo === "verEquipamento"} />
         </Grid>
       </Grid>

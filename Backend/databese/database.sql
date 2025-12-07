@@ -31,6 +31,48 @@ CREATE TABLE servicos (
   preco NUMERIC(10,2) NOT NULL
 );
 
+CREATE TABLE cliente (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  cpf_cnpj VARCHAR(20) NOT NULL UNIQUE,
+  telefone VARCHAR(20),
+  email VARCHAR(100),
+  cep VARCHAR(20),
+  rg VARCHAR(20),
+  nascimento DATE,
+  contribuinte VARCHAR(10),
+  inscricao_estadual VARCHAR(30)
+);
+
+CREATE TABLE ordem_servico (
+    id SERIAL PRIMARY KEY,
+    id_cliente INT NOT NULL,
+
+    equipamento VARCHAR(255),
+    marca VARCHAR(100),
+    modelo VARCHAR(100),
+    numero_serie VARCHAR(100),
+    defeito VARCHAR(255),
+    perifericos VARCHAR(255),
+    senha VARCHAR(255),
+
+    criado_em TIMESTAMP DEFAULT NOW(),
+
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id)
+);
+
+CREATE TABLE ordem_servico_item (
+  id SERIAL PRIMARY KEY,
+  id_ordem INT NOT NULL,
+  id_servico INT NOT NULL,
+  quantidade INT NOT NULL DEFAULT 1,
+  preco_unit NUMERIC(10,2) NOT NULL,
+
+  FOREIGN KEY (id_ordem) REFERENCES ordem_servico(id),
+  FOREIGN KEY (id_servico) REFERENCES servicos(id)
+);
+
+
 -- INSERE USUARIOS
 --usuario admin@outlook.com
 --senha   Administrador

@@ -1,74 +1,58 @@
 const express = require("express");
-const servicoService = require("../services/servico-service");
+const clienteService = require("../services/cliente-service");
 const authService = require("../services/auth-service");
 
-const servicoRouter = express.Router();
+const clienteRouter = express.Router();
 
-/**
- * 🔹 LISTAR SERVIÇOS
- * Permissão: VER
- */
-servicoRouter.get(
+// LISTAR TODOS (requer permissão VER)
+clienteRouter.get(
     "/",
     ...authService.requirePermissao("VER"),
     async (req, res) => {
         try {
-            const dados = await servicoService.listar();
-            res.json(dados);
+            const clientes = await clienteService.listarClientes();
+            res.json(clientes);
         } catch (err) {
             res.status(500).json({ erro: err.message });
         }
     }
 );
 
-/**
- * BUSCAR POR ID
- * Permissão: VER
- */
-servicoRouter.get(
+// BUSCAR POR ID
+clienteRouter.get(
     "/:id",
     ...authService.requirePermissao("VER"),
     async (req, res) => {
         try {
-            const dados = await servicoService.buscarPorId(req.params.id);
-            res.json(dados);
+            const cliente = await clienteService.buscarClientePorId(req.params.id);
+            res.json(cliente);
         } catch (err) {
             res.status(404).json({ erro: err.message });
         }
     }
 );
 
-/**
- * CRIAR SERVIÇO
- * Permissão: CRIAR
- */
-servicoRouter.post(
+// CRIAR
+clienteRouter.post(
     "/",
     ...authService.requirePermissao("CRIAR"),
     async (req, res) => {
         try {
-           //const novo = await servicoService.criar(req.body);
+            const novo = await clienteService.criarCliente(req.body);
             res.status(201).json(novo);
         } catch (err) {
-           //console.log("❌ ERRO AO CRIAR SERVIÇO:", err.message);
             res.status(400).json({ erro: err.message });
         }
     }
 );
 
-/**
- * ATUALIZAR SERVIÇO
- * Permissão: EDITAR
- */
-servicoRouter.put(
+// ATUALIZAR
+clienteRouter.put(
     "/:id",
     ...authService.requirePermissao("EDITAR"),
     async (req, res) => {
         try {
-            const atualizado = await servicoService.atualizar(
-                req.params.id,
-                req.body
-            );
+            const atualizado = await clienteService.atualizarCliente(req.params.id, req.body);
             res.json(atualizado);
         } catch (err) {
             res.status(400).json({ erro: err.message });
@@ -76,21 +60,18 @@ servicoRouter.put(
     }
 );
 
-/**
- * DELETAR SERVIÇO
- * Permissão: DELETAR
- */
-servicoRouter.delete(
+// DELETAR
+clienteRouter.delete(
     "/:id",
     ...authService.requirePermissao("DELETAR"),
     async (req, res) => {
         try {
-            await servicoService.deletar(req.params.id);
-            res.json({ mensagem: "Serviço deletado com sucesso" });
+            await clienteService.deletarCliente(req.params.id);
+            res.json({ mensagem: "Cliente deletado com sucesso." });
         } catch (err) {
             res.status(400).json({ erro: err.message });
         }
     }
 );
 
-module.exports = servicoRouter;
+module.exports = clienteRouter;

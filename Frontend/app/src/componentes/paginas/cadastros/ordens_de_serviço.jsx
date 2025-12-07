@@ -16,14 +16,14 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-// Catálogo de serviços (mock)
+// Catálogo mock (trocar pelo backend depois)
 const mockServicosCatalogo = [
   { id: 1, nome: "Formatação de Notebook", preco: 150 },
   { id: 2, nome: "Troca de HD para SSD", preco: 300 },
   { id: 3, nome: "Limpeza interna e troca de pasta térmica", preco: 120 },
 ];
 
-export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
+export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
   const [ordem, setOrdem] = useState({
     nome: "",
     cpfCnpj: "",
@@ -43,7 +43,7 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
     modelo: "",
   });
 
-  // Serviços escolhidos para esta ordem
+  // Serviços escolhidos
   const [servicosEscolhidos, setServicosEscolhidos] = useState([]);
   const [servicoSelecionado, setServicoSelecionado] = useState("");
   const [qtd, setQtd] = useState(1);
@@ -54,35 +54,32 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
 
   const handleSalvar = () => {
     const ordemCompleta = { ...ordem, servicos: servicosEscolhidos };
+
     if (modo === "criarOrdem") {
-      // axios.post("http://localhost:3002/ordens", ordemCompleta)
       alert("Nova ordem criada!");
     } else {
-      // axios.put(`http://localhost:3002/ordens/${ordemId}`, ordemCompleta)
       alert("Ordem atualizada!");
     }
+
     trocarTela("ordens");
   };
 
   const adicionarServico = () => {
     const servico = mockServicosCatalogo.find((s) => s.id === servicoSelecionado);
     if (!servico) return;
+
     setServicosEscolhidos([
       ...servicosEscolhidos,
-      { ...servico, qtd }
+      { ...servico, qtd },
     ]);
+
     setServicoSelecionado("");
     setQtd(1);
   };
 
+  // Mock temporário
   useEffect(() => {
     if (ordemId && modo !== "criarOrdem") {
-      // Buscar dados do backend
-      // axios.get(`http://localhost:3002/ordens/${ordemId}`)
-      //   .then(res => setOrdem(res.data))
-      //   .catch(err => console.error(err));
-
-      // Mock temporário
       setOrdem({
         nome: "João Silva",
         cpfCnpj: "123.456.789-00",
@@ -117,86 +114,203 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
         Dados do Cliente
       </Typography>
       <Divider sx={{ mb: 2 }} />
+
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Nome" name="nome" value={ordem.nome} onChange={handleChange} disabled={modo === "verOrdem"}
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Nome"
+            name="nome"
+            value={ordem.nome}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="CPF/CNPJ" name="cpfCnpj" value={ordem.cpfCnpj} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="CPF/CNPJ"
+            name="cpfCnpj"
+            value={ordem.cpfCnpj}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Telefone" name="contato" value={ordem.contato} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Telefone"
+            name="contato"
+            value={ordem.contato}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="E-mail" name="email" value={ordem.email} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="E-mail"
+            name="email"
+            value={ordem.email}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Contribuinte" name="contribuinte" value={ordem.contribuinte} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Contribuinte"
+            name="contribuinte"
+            value={ordem.contribuinte}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="RG" name="rg" value={ordem.rg} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="RG"
+            name="rg"
+            value={ordem.rg}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Data de Nascimento" name="nascimento" value={ordem.nascimento} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Data de Nascimento"
+            name="nascimento"
+            value={ordem.nascimento}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Inscrição Estadual" name="inscricaoEstadual" value={ordem.inscricaoEstadual} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Inscrição Estadual"
+            name="inscricaoEstadual"
+            value={ordem.inscricaoEstadual}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="CEP" name="cep" value={ordem.cep} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="CEP"
+            name="cep"
+            value={ordem.cep}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-      </Grid> {/* Dados do Equipamento */}
+      </Grid>
+
+      {/* DADOS DO EQUIPAMENTO */}
       <Typography variant="subtitle1" sx={{ mt: 4, mb: 1 }}>
         Dados do Equipamento
       </Typography>
       <Divider sx={{ mb: 2 }} />
+
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Equipamento" name="equipamento" value={ordem.equipamento} onChange={handleChange} disabled={modo === "verOrdem"}
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Equipamento"
+            name="equipamento"
+            value={ordem.equipamento}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Marca" name="marca" value={ordem.marca} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Marca"
+            name="marca"
+            value={ordem.marca}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Problema Técnico" name="defeito" value={ordem.defeito} onChange={handleChange} disabled={modo === "verOrdem"}
-          />
-        </Grid> <Grid item xs={12}>
-          <TextField fullWidth label="Periféricos (carregador, teclado...)" name="perifericos" value={ordem.perifericos} onChange={handleChange} disabled={modo === "verOrdem"}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Senha" name="senha" value={ordem.senha} onChange={handleChange} disabled={modo === "verOrdem"}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Nº de Série" name="numeroSerie" value={ordem.numeroSerie} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Problema Técnico"
+            name="defeito"
+            value={ordem.defeito}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Modelo" name="modelo" value={ordem.modelo} onChange={handleChange} disabled={modo === "verOrdem"}
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Periféricos"
+            name="perifericos"
+            value={ordem.perifericos}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
           />
         </Grid>
-      </Grid>{modo !== "verOrdem" && (
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Senha"
+            name="senha"
+            value={ordem.senha}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Nº de Série"
+            name="numeroSerie"
+            value={ordem.numeroSerie}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <TextField
+            fullWidth
+            label="Modelo"
+            name="modelo"
+            value={ordem.modelo}
+            onChange={handleChange}
+            disabled={modo === "verOrdem"}
+          />
+        </Grid>
+      </Grid>
+
+      {/* SERVIÇOS SELECIONÁVEIS */}
+      {modo !== "verOrdem" && (
         <>
-          {/* Seleção de Serviços */}
           <Typography variant="subtitle1" sx={{ mt: 4, mb: 1 }}>
             Serviços
           </Typography>
           <Divider sx={{ mb: 2 }} />
 
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Select
                 fullWidth
                 value={servicoSelecionado}
@@ -206,15 +320,16 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
                 <MenuItem value="">
                   <em>Selecione um serviço</em>
                 </MenuItem>
+
                 {mockServicosCatalogo.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
-                    {s.nome} - R$ {s.preco}
+                    {s.nome} — R$ {s.preco}
                   </MenuItem>
                 ))}
               </Select>
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid size={{ xs: 3, md: 3 }}>
               <TextField
                 fullWidth
                 type="number"
@@ -224,7 +339,7 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
               />
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid size={{ xs: 3, md: 3 }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -238,7 +353,7 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
         </>
       )}
 
-      {/* Lista de serviços escolhidos */}
+      {/* TABELA DE SERVIÇOS ESCOLHIDOS */}
       {servicosEscolhidos.length > 0 && (
         <Table sx={{ mt: 2 }}>
           <TableHead>
@@ -249,30 +364,28 @@ export default function ordem_de_serviço({ ordemId, modo, trocarTela }) {
               <TableCell>Total</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {servicosEscolhidos.map((s) => (
               <TableRow key={s.id}>
                 <TableCell>{s.nome}</TableCell>
                 <TableCell>{s.qtd}</TableCell>
-                <TableCell>R$ {s.preco}</TableCell>
-                <TableCell>R$ {s.qtd * s.preco}</TableCell>
+                <TableCell>R$ {s.prec}</TableCell>
+                <TableCell>R$ {(s.qtd * s.preco).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
-      {/* Botões de ação */}
+
+      {/* BOTÕES */}
       <Box sx={{ mt: 4, display: "flex", gap: 2 }}>
-        <Button
-          variant="outlined"
-          color="secondary"
-          type="button"
-          onClick={() => trocarTela("ordens")}
-        >
+        <Button variant="outlined" color="secondary" onClick={() => trocarTela("ordens")}>
           Voltar
         </Button>
+
         {(modo === "editarOrdem" || modo === "criarOrdem") && (
-          <Button variant="contained" color="primary" type="button" onClick={handleSalvar}>
+          <Button variant="contained" color="primary" onClick={handleSalvar}>
             {modo === "criarOrdem" ? "Criar Ordem" : "Salvar Alterações"}
           </Button>
         )}

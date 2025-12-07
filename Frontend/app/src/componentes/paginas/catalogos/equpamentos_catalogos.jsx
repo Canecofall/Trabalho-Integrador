@@ -20,12 +20,10 @@ export default function EquipamentosCatalogo({ trocarTela, permissoes = [] }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  //permisoes
   const podeVer = permissoes.some(permissao => permissao.Permissao.descricao === "VER");
   const podeEditar = permissoes.some(permissao => permissao.Permissao.descricao === "EDITAR");
   const podeDeletar = permissoes.some(permissao => permissao.Permissao.descricao === "DELETAR");
   const podeCriar = permissoes.some(permissao => permissao.Permissao.descricao === "CRIAR");
-
   useEffect(() => {
     setEquipamentos([
       { id: 1, cliente: "João Silva", equipamento: "Notebook Dell", modelo: "Inspiron 15" },

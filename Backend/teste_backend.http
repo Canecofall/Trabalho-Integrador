@@ -1,9 +1,17 @@
-POST http://localhost:3002/curso
+POST http://localhost:3002/clientes
 Content-Type: application/json
-Authorization: Bearer "$2b$10$mHBljwcXFAHfT73HXh5FZOZsgsqmiBGrLALB3qJhSzJ3CLCqWoN8K"
+Authorization: Bearer {{token}}
+@token = ""
 
 {
-  "nome": "Novo Curso de Teste",
-  "descricao": "Curso criado apenas para testar proteção",
-  "carga_horaria": 40
+  "nome": "João Silva",
+  "cpf_cnpj": "12345678900",
+  "telefone": "4799999999",
+  "email": "joao@example.com",
+  "cep": "89000000",
+  "rg": "1234567",
+  "nascimento": "1990-01-01",
+  "contribuinte": "Sim",
+  "inscricao_estadual": "987654321"
 }
+

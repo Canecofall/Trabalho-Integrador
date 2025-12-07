@@ -9,6 +9,7 @@ const usuarioRouter = require("./controllers/usuario-controller");
 const permissaoRouter = require("./controllers/permissao-controller");
 const authRouter = require("./controllers/auth-controller");
 const servicoController = require("./controllers/servico-controller");
+const clienteController = require("./controllers/cliente-controller");
 
 // Services
 const authService = require("./services/auth-service");
@@ -42,6 +43,7 @@ app.use("/usuario_permissao", usuarioPermissaoRouter);
 app.use("/usuario", usuarioRouter);
 app.use("/permissao", permissaoRouter);
 app.use("/servicos", servicoController);
+app.use("/clientes", clienteController);
 
 // INICIAR SERVIDOR *DEPOIS* de registrar as rotas
 const PORT = 3002;
