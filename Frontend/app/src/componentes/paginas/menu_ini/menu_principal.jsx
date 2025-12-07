@@ -3,9 +3,9 @@ import {
   Box,
   Drawer,
   List,
-  ListItem,
   ListItemText,
   IconButton,
+  ListItemButton,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import "@/componentes/tema/Style.css"
@@ -22,52 +22,50 @@ export default function Menu_ini({ trocarTela, onLogout }) {
       <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
         <Box sx={{ width: 250 }}>
           <List>
-            <ListItem
-              button
+            <ListItemButton
               onClick={() => {
                 trocarTela("dashboard");
                 setOpen(false);
               }}
             >
               <ListItemText primary="Dashboard" />
-            </ListItem>
-            <ListItem
-              button
+            </ListItemButton>
+
+            <ListItemButton
               onClick={() => {
                 trocarTela("equipamentos");
                 setOpen(false);
               }}
             >
               <ListItemText primary="Equipamentos armazenados" />
-            </ListItem>
-            <ListItem
-              button
+            </ListItemButton>
+
+            <ListItemButton
               onClick={() => {
                 trocarTela("ordens");
                 setOpen(false);
               }}
             >
               <ListItemText primary="Ordens de serviço" />
-            </ListItem>
-            <ListItem
-              button
+            </ListItemButton>
+
+            <ListItemButton
               onClick={() => {
                 trocarTela("servicos");
                 setOpen(false);
               }}
             >
               <ListItemText primary="Serviços" />
-            </ListItem>
+            </ListItemButton>
 
-            <ListItem
-              button
+            <ListItemButton
               onClick={() => {
                 onLogout();
                 setOpen(false);
               }}
             >
               <ListItemText primary="Logout" />
-            </ListItem>
+            </ListItemButton>
           </List>
         </Box>
       </Drawer>

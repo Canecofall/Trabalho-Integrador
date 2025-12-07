@@ -17,61 +17,83 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [telaAtual, setTelaAtual] = useState("dashboard");
+
   const [ordemSelecionada, setOrdemSelecionada] = useState(null);
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
-  const [EquipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
+  const [equipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
 
   const telasSemMenu = [
     "verOrdem", "editarOrdem", "criarOrdem",
     "verServico", "editarServico", "criarServico",
     "verEquipamento", "editarEquipamento", "criarEquipamento"
   ];
+
+  // FUNÇÕES AUXILIARES
+
+  const decodeToken = () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return null;
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (err) {
+      console.error("Erro ao decodificar token:", err);
+      return null;
+    }
+  };
+
+  const buscarPermissoesPorEmail = async (email) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(
+        `http://localhost:3002/usuario_permissao/usuario/${email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setPermissoes(response.data.permissoes || []);
+    } catch (error) {
+      console.error("Erro ao buscar permissões:", error);
+      setPermissoes([]);
+    }
+  };
+
   const trocarTela = (novaTela, id = null) => {
     setTelaAtual(novaTela);
-    if (novaTela.includes("Ordem")) {
+
+    if (novaTela.startsWith("verOrdem") || novaTela.startsWith("editarOrdem") || novaTela.startsWith("criarOrdem")) {
       setOrdemSelecionada(id);
     }
-    if (novaTela.includes("Servico")) {
+
+    if (novaTela.startsWith("verServico") || novaTela.startsWith("editarServico") || novaTela.startsWith("criarServico")) {
       setServicoSelecionado(id);
     }
-    if (novaTela.includes("Equipamento")) {
+
+    if (novaTela.startsWith("verEquipamento") || novaTela.startsWith("editarEquipamento") || novaTela.startsWith("criarEquipamento")) {
       setEquipamentoSelecionado(id);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserEmail("");
-    setTelaAtual("dashboard");
+    setPermissoes([]);
+    localStorage.removeItem("token");
   };
-
-  const buscarPermissoesPorEmail = async (email) => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(
-      `http://localhost:3002/usuario_permissao/usuario/${email}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    // --- CONVERSÃO CORRETA ---
-    const lista = response.data.permissoes.map(
-      (p) => p.Permissao.descricao
-    );
-
-    console.log("Permissões convertidas:", lista);
-    
-    setPermissoes(lista); // <<<<<<<<<< AGORA SIM
-
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 
   const handleLogin = (success, username = null) => {
     if (success) {
-      if (username) setUserEmail(username);
+      if (username) {
+        setUserEmail(username);
+      } else {
+        const payload = decodeToken();
+        if (payload?.username) {
+          setUserEmail(payload.username);
+        }
+      }
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
@@ -79,52 +101,31 @@ export default function App() {
       localStorage.removeItem("token");
     }
   };
-  useEffect(() => {
-    console.log("Permissões recebidas:", permissoes);
-  }, [permissoes]);
+
+  //  INICIALIZAÇÃO DO USUÁRIO
 
   useEffect(() => {
-    // Busca permissões quando o usuário estiver logado e tiver email
+    const payload = decodeToken();
+    if (payload?.username) {
+      setUserEmail(payload.username);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  //  BUSCAR PERMISSÕES QUANDO LOGAR
+
+  useEffect(() => {
     if (isLoggedIn && userEmail) {
       buscarPermissoesPorEmail(userEmail);
     }
   }, [isLoggedIn, userEmail]);
 
+  // DEBUG
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        if (payload.username) {
-          setUserEmail(payload.username);
-          setIsLoggedIn(true);
-        }
-      } catch (error) {
-        console.error("Erro ao decodificar token:", error);
-        localStorage.removeItem("token");
-      }
-    }
-  }, []);
+    console.log("Permissões carregadas:", permissoes);
+  }, [permissoes]);
 
-  useEffect(() => {
-    // Verifica se há token no localStorage ao carregar
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Tenta decodificar o token para obter o email do usuário
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        if (payload.username) {
-          setUserEmail(payload.username);
-          setIsLoggedIn(true);
-        }
-      } catch (error) {
-        console.error("Erro ao decodificar token:", error);
-        localStorage.removeItem("token");
-      }
-    }
-  }, []);
-
-
+  //  LOGIN
   if (!isLoggedIn) {
     return (
       <Box id="bg">
@@ -133,20 +134,27 @@ export default function App() {
     );
   }
 
+  //  RENDERIZAÇÃO PRINCIPAL
   return (
     <>
-    
       {!telasSemMenu.includes(telaAtual) && (
         <Menu_ini trocarTela={trocarTela} onLogout={handleLogout} />
       )}
+
       {telaAtual === "dashboard" && <Dashboard />}
+
       {telaAtual === "equipamentos" && (
-        <EquipamentosCatalogo trocarTela={trocarTela} permissoes={permissoes} />)}
+        <EquipamentosCatalogo trocarTela={trocarTela} permissoes={permissoes} />
+      )}
+
       {telaAtual === "servicos" && (
-        <ServicoCatalogo trocarTela={trocarTela} permissoes={permissoes} />)}
+        <ServicoCatalogo trocarTela={trocarTela} permissoes={permissoes} />
+      )}
+
       {telaAtual === "ordens" && (
         <OrdensDeServicoCatalogo trocarTela={trocarTela} permissoes={permissoes} />
       )}
+
       {(telaAtual === "verOrdem" || telaAtual === "editarOrdem" || telaAtual === "criarOrdem") && (
         <OrdemDeServico
           ordemId={ordemSelecionada}
@@ -154,6 +162,7 @@ export default function App() {
           trocarTela={trocarTela}
         />
       )}
+
       {(telaAtual === "verServico" || telaAtual === "editarServico" || telaAtual === "criarServico") && (
         <Servico
           servicoId={servicoSelecionado}
@@ -161,9 +170,10 @@ export default function App() {
           trocarTela={trocarTela}
         />
       )}
+
       {(telaAtual === "verEquipamento" || telaAtual === "editarEquipamento" || telaAtual === "criarEquipamento") && (
         <EquipamentoArmazenado
-          equipamentoId={EquipamentoSelecionado}
+          equipamentoId={equipamentoSelecionado}
           modo={telaAtual}
           trocarTela={trocarTela}
         />

@@ -1,11 +1,9 @@
-
-//GET http://localhost:3002/aluno/todos
-
-POST http://localhost:3002/novoUsuario
+POST http://localhost:3002/curso
 Content-Type: application/json
+Authorization: Bearer "$2b$10$mHBljwcXFAHfT73HXh5FZOZsgsqmiBGrLALB3qJhSzJ3CLCqWoN8K"
 
 {
-    "username": "admin@outlook.com",
-    "passwd": "administrador",
-    "nome": "admin"
+  "nome": "Novo Curso de Teste",
+  "descricao": "Curso criado apenas para testar proteção",
+  "carga_horaria": 40
 }

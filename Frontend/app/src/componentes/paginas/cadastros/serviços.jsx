@@ -12,23 +12,21 @@ import axios from "axios";
 export default function Servico({ servicoId, modo, trocarTela }) {
   const [servico, setServico] = useState({
     nome: "",
-    descricao: "",
     preco: "",
+    descricao: "",
   });
 
   useEffect(() => {
     if (servicoId && modo !== "criarServico") {
-      // Buscar dados do backend
-      // axios.get(`http://localhost:3002/servicos/${servicoId}`)
-      //   .then(res => setServico(res.data))
-      //   .catch(err => console.error(err));
+      axios
+        .get(`http://localhost:3002/servicos/${servicoId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => setServico(res.data))
+        .catch((err) => console.error("Erro ao buscar serviço:", err));
 
-      // Mock temporário
-      setServico({
-        nome: "Formatação de Notebook",
-        descricao: "Instalação limpa do sistema operacional e drivers",
-        preco: 150,
-      });
     }
   }, [servicoId, modo]);
 
@@ -36,16 +34,57 @@ export default function Servico({ servicoId, modo, trocarTela }) {
     setServico({ ...servico, [e.target.name]: e.target.value });
   };
 
-  const handleSalvar = () => {
-    if (modo === "criarServico") {
-      // axios.post("http://localhost:3002/servicos", servico)
-      alert("Novo serviço criado!");
-    } else {
-      // axios.put(`http://localhost:3002/servicos/${servicoId}`, servico)
-      alert("Serviço atualizado!");
+  const handleSalvar = async () => {
+    try {
+      if (!servico.nome.trim()) {
+        alert("Nome é obrigatório");
+        return;
+      }
+      if (!servico.descricao.trim()) {
+        alert("Descrição é obrigatória");
+        return;
+      }
+      if (servico.preco === "" || isNaN(servico.preco)) {
+        alert("Preço inválido");
+        return;
+      }
+
+      const dados = {
+        nome: servico.nome,
+        descricao: servico.descricao,
+        preco: parseFloat(servico.preco),
+      };
+
+      if (modo === "criarServico") {
+        await axios.post(
+          "http://localhost:3002/servicos",
+          dados,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        alert("Serviço criado com sucesso!");
+      } else {
+        axios.put(`http://localhost:3002/servicos/${servicoId}`, dados, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        alert("Serviço atualizado com sucesso!");
+      }
+
+      trocarTela("servicos");
+
+    } catch (err) {
+      console.error("Erro ao salvar serviço:", err);
+      alert("Erro ao salvar serviço. Veja o console.");
     }
-    trocarTela("servicos");
   };
+
 
   return (
     <Box sx={{ p: 3 }}>
@@ -61,7 +100,7 @@ export default function Servico({ servicoId, modo, trocarTela }) {
       <Divider sx={{ mb: 2 }} />
 
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField
             fullWidth
             label="Nome"
@@ -71,9 +110,10 @@ export default function Servico({ servicoId, modo, trocarTela }) {
             disabled={modo === "verServico"}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField
             fullWidth
+            multiline
             label="Descrição"
             name="descricao"
             value={servico.descricao}
@@ -81,7 +121,8 @@ export default function Servico({ servicoId, modo, trocarTela }) {
             disabled={modo === "verServico"}
           />
         </Grid>
-        <Grid item xs={12}>
+
+        <Grid size={{ xs: 12, md: 3 }}>
           <TextField
             fullWidth
             type="number"
@@ -92,9 +133,9 @@ export default function Servico({ servicoId, modo, trocarTela }) {
             disabled={modo === "verServico"}
           />
         </Grid>
+
       </Grid>
 
-      {/* Botões */}
       <Box sx={{ mt: 4, display: "flex", gap: 2 }}>
         <Button
           variant="outlined"
@@ -104,6 +145,7 @@ export default function Servico({ servicoId, modo, trocarTela }) {
         >
           Voltar
         </Button>
+
         {(modo === "editarServico" || modo === "criarServico") && (
           <Button
             variant="contained"
