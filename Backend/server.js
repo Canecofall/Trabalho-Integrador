@@ -49,6 +49,7 @@ app.use("/clientes", clienteController);
 app.use("/ordens", ordemServicoController);
 app.use("/dashboard", dashboardController);
 
+
 // INICIAR SERVIDOR *DEPOIS* de registrar as rotas
 const PORT = 3002;
 app.listen(PORT, () => console.log(`Servidor está rodando na porta ${PORT}.`));
