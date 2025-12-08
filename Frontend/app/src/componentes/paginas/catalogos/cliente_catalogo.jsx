@@ -198,6 +198,7 @@ export default function ClientesCatalogo({ trocarTela, permissoes = [] }) {
                 </Table>
             </TableContainer>
 
+            {/* PAGINAÇÃO */}
             <TablePagination
                 component="div"
                 count={clientesOrdenados.length}

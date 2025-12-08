@@ -19,18 +19,18 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
   const [servicos, setServicos] = useState([]);
   const [pesquisa, setPesquisa] = useState("");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // ESTADOS PARA ORDENAÇÃO
+  // Ordenação
   const [ordem, setOrdem] = useState("asc");
   const [campoOrdenacao, setCampoOrdenacao] = useState("id");
-  //permisoes
-		const podeVer = permissoes.some(permissao => permissao.Permissao.descricao === "VER");
-		const podeEditar = permissoes.some(permissao => permissao.Permissao.descricao === "EDITAR");
-		const podeDeletar = permissoes.some(permissao => permissao.Permissao.descricao === "DELETAR");
-		const podeCriar = permissoes.some(permissao => permissao.Permissao.descricao === "CRIAR");
 
-  // BUSCAR SERVIÇOS NO BACKEND
+  // Permissões
+  const podeVer = permissoes.some(p => p.Permissao.descricao === "VER");
+  const podeEditar = permissoes.some(p => p.Permissao.descricao === "EDITAR");
+  const podeDeletar = permissoes.some(p => p.Permissao.descricao === "DELETAR");
+  const podeCriar = permissoes.some(p => p.Permissao.descricao === "CRIAR");
+
   const carregarServicos = async () => {
     try {
       const res = await axios.get("http://localhost:3002/servicos", {
@@ -40,6 +40,7 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
       });
 
       setServicos(res.data);
+
     } catch (erro) {
       console.error("Erro ao buscar serviços:", erro);
       alert("Erro ao carregar serviços.");
@@ -50,7 +51,6 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
     carregarServicos();
   }, []);
 
-  // FUNÇÃO DE ALTERAR ORDENAÇÃO
   const alterarOrdenacao = (campo) => {
     if (campoOrdenacao === campo) {
       setOrdem(ordem === "asc" ? "desc" : "asc");
@@ -60,14 +60,12 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
     }
   };
 
-  // FILTRAGEM
   const servicosFiltrados = servicos.filter(
     (s) =>
       s.id?.toString().includes(pesquisa) ||
       s.nome?.toLowerCase().includes(pesquisa.toLowerCase())
   );
 
-  // ORDENAÇÃO
   const servicosOrdenados = [...servicosFiltrados].sort((a, b) => {
     const campo = campoOrdenacao;
 
@@ -78,28 +76,25 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
     }
 
     return ordem === "asc"
-      ? a[campo].localeCompare(b[campo])
-      : b[campo].localeCompare(a[campo]);
+      ? String(a[campo]).localeCompare(String(b[campo]))
+      : String(b[campo]).localeCompare(String(a[campo]));
   });
 
-  // PAGINAÇÃO
   const servicosPaginados = servicosOrdenados.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
 
-  // EXCLUIR SERVIÇO
   const handleDelete = async (id) => {
     if (!window.confirm("Tem certeza que deseja excluir este serviço?")) return;
 
     try {
       await axios.delete(`http://localhost:3002/servicos/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
       setServicos((prev) => prev.filter((s) => s.id !== id));
+
     } catch (erro) {
       console.error("Erro ao deletar:", erro);
       alert("Erro ao deletar serviço.");
@@ -109,22 +104,20 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
   return (
     <div id="bg">
       <Box sx={{ p: 3 }}>
+
         <TextField
           label="Pesquisar por Nº ou Nome"
-          variant="outlined"
           fullWidth
           margin="normal"
           value={pesquisa}
           onChange={(e) => setPesquisa(e.target.value)}
         />
 
-        {/* TABELA DE SERVIÇOS */}
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
 
-                {/* ID */}
                 <TableCell
                   onClick={() => alterarOrdenacao("id")}
                   style={{ cursor: "pointer", fontWeight: "bold" }}
@@ -132,7 +125,6 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
                   ID {campoOrdenacao === "id" ? (ordem === "asc" ? "▲" : "▼") : ""}
                 </TableCell>
 
-                {/* Nome */}
                 <TableCell
                   onClick={() => alterarOrdenacao("nome")}
                   style={{ cursor: "pointer", fontWeight: "bold" }}
@@ -140,16 +132,13 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
                   Nome {campoOrdenacao === "nome" ? (ordem === "asc" ? "▲" : "▼") : ""}
                 </TableCell>
 
-                {/* Descrição */}
                 <TableCell
                   onClick={() => alterarOrdenacao("descricao")}
                   style={{ cursor: "pointer", fontWeight: "bold" }}
                 >
-                  Descrição{" "}
-                  {campoOrdenacao === "descricao" ? (ordem === "asc" ? "▲" : "▼") : ""}
+                  Descrição {campoOrdenacao === "descricao" ? (ordem === "asc" ? "▲" : "▼") : ""}
                 </TableCell>
 
-                {/* Preço */}
                 <TableCell
                   onClick={() => alterarOrdenacao("preco")}
                   style={{ cursor: "pointer", fontWeight: "bold" }}
@@ -157,9 +146,7 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
                   Preço {campoOrdenacao === "preco" ? (ordem === "asc" ? "▲" : "▼") : ""}
                 </TableCell>
 
-                <TableCell>
-                  <b>Ações</b>
-                </TableCell>
+                <TableCell><b>Ações</b></TableCell>
               </TableRow>
             </TableHead>
 
@@ -176,7 +163,6 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
                       {podeVer && (
                         <Button
                           variant="outlined"
-                          color="secondary"
                           onClick={() => trocarTela("verServico", s.id)}
                         >
                           Ver
@@ -204,39 +190,35 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
                       )}
                     </Stack>
                   </TableCell>
+
                 </TableRow>
               ))}
             </TableBody>
+
           </Table>
         </TableContainer>
 
-        {/* PAGINAÇÃO */}
         <TablePagination
           component="div"
           count={servicosOrdenados.length}
           page={page}
           rowsPerPage={rowsPerPage}
-          onPageChange={(event, newPage) => setPage(newPage)}
-          rowsPerPageOptions={[5, 10, 25, 50, 100]}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(parseInt(event.target.value, 10));
+          onPageChange={(e, newPage) => setPage(newPage)}
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(parseInt(e.target.value, 10));
             setPage(0);
           }}
-          labelRowsPerPage="Registros por página"
         />
 
-        {/* BOTÃO CRIAR SERVIÇO */}
         {podeCriar && (
           <Stack direction="row-reverse" sx={{ mt: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => trocarTela("criarServico")}
-            >
+            <Button variant="contained" onClick={() => trocarTela("criarServico")}>
               Criar Serviço
             </Button>
           </Stack>
         )}
+
       </Box>
     </div>
   );

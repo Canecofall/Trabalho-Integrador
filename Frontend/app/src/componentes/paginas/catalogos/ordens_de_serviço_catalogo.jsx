@@ -245,7 +245,8 @@ export default function OrdensDeServicoCatalogo({ trocarTela, permissoes = [] })
                         </TableBody>
                     </Table>
                 </TableContainer>
-
+                
+                {/* PAGINAÇÃO */}
                 <TablePagination
                     component="div"
                     count={ordensOrdenadas.length}

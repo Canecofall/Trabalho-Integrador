@@ -6,6 +6,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
+import { mascaraPreco } from "../../mascara/mascara";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -24,15 +25,26 @@ export default function Servico({ servicoId, modo, trocarTela }) {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
-        .then((res) => setServico(res.data))
+        .then((res) => {
+          const s = res.data; setServico({ ...s, preco: mascaraPreco(String(s.preco)) });
+        })
         .catch((err) => console.error("Erro ao buscar serviço:", err));
 
     }
   }, [servicoId, modo]);
 
   const handleChange = (e) => {
-    setServico({ ...servico, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    let novoValor = value;
+
+    if (name === "preco") {
+      novoValor = mascaraPreco(value);
+    }
+
+    setServico({ ...servico, [name]: novoValor });
   };
+
 
   const handleSalvar = async () => {
     try {
@@ -44,7 +56,7 @@ export default function Servico({ servicoId, modo, trocarTela }) {
         alert("Descrição é obrigatória");
         return;
       }
-      if (servico.preco === "" || isNaN(servico.preco)) {
+      if (!servico.preco || servico.preco.trim() === "R$" || servico.preco.length < 4) {
         alert("Preço inválido");
         return;
       }
@@ -52,7 +64,12 @@ export default function Servico({ servicoId, modo, trocarTela }) {
       const dados = {
         nome: servico.nome,
         descricao: servico.descricao,
-        preco: parseFloat(servico.preco),
+        preco: Number(
+          servico.preco
+            .replace("R$ ", "")
+            .replace(/\./g, "")
+            .replace(",", ".")
+        )
       };
 
       if (modo === "criarServico") {
@@ -125,13 +142,13 @@ export default function Servico({ servicoId, modo, trocarTela }) {
         <Grid size={{ xs: 12, md: 3 }}>
           <TextField
             fullWidth
-            type="number"
             label="Preço"
             name="preco"
             value={servico.preco}
             onChange={handleChange}
             disabled={modo === "verServico"}
           />
+
         </Grid>
 
       </Grid>

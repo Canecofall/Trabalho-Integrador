@@ -49,3 +49,22 @@ export function mascaraData(valor) {
     .replace(/(\d{2})(\d)/, "$1/$2")
     .replace(/(\d{2})(\d{1,4})$/, "$1/$2");
 }
+
+export function mascaraPreco(valor) {
+  if (!valor) return "";
+
+  // Remove tudo que não for número
+  let v = valor.replace(/\D/g, "");
+
+  // Se vazio, retorna
+  if (v === "") return "";
+
+  // Converte para centavos
+  v = (parseInt(v, 10) / 100).toFixed(2);
+
+  // Converte para formato brasileiro
+  v = v.replace(".", ",");
+
+  // Adiciona separador de milhar
+  return "R$ " + v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
