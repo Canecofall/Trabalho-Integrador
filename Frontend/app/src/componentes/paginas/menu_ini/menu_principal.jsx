@@ -8,10 +8,15 @@ import {
   ListItemButton,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import "@/componentes/tema/Style.css"
+import "@/componentes/tema/Style.css";
 
 export default function Menu_ini({ trocarTela, onLogout }) {
   const [open, setOpen] = useState(false);
+
+  const navegar = (tela) => {
+    trocarTela(tela);
+    setOpen(false);
+  };
 
   return (
     <Box id="bg" sx={{ flexGrow: 1, p: 3 }}>
@@ -22,42 +27,28 @@ export default function Menu_ini({ trocarTela, onLogout }) {
       <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
         <Box sx={{ width: 250 }}>
           <List>
-            <ListItemButton
-              onClick={() => {
-                trocarTela("dashboard");
-                setOpen(false);
-              }}
-            >
+
+            {/* DASHBOARD */}
+            <ListItemButton onClick={() => navegar("dashboard")}>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
 
-            <ListItemButton
-              onClick={() => {
-                trocarTela("equipamentos");
-                setOpen(false);
-              }}
-            >
-              <ListItemText primary="Equipamentos armazenados" />
+            {/* CLIENTES */}
+            <ListItemButton onClick={() => navegar("clientes")}>
+              <ListItemText primary="Clientes" />
             </ListItemButton>
 
-            <ListItemButton
-              onClick={() => {
-                trocarTela("ordens");
-                setOpen(false);
-              }}
-            >
-              <ListItemText primary="Ordens de serviço" />
+            {/* ORDENS */}
+            <ListItemButton onClick={() => navegar("ordens")}>
+              <ListItemText primary="Ordens de Serviço" />
             </ListItemButton>
 
-            <ListItemButton
-              onClick={() => {
-                trocarTela("servicos");
-                setOpen(false);
-              }}
-            >
+            {/* SERVIÇOS */}
+            <ListItemButton onClick={() => navegar("servicos")}>
               <ListItemText primary="Serviços" />
             </ListItemButton>
 
+            {/* LOGOUT */}
             <ListItemButton
               onClick={() => {
                 onLogout();
@@ -66,6 +57,7 @@ export default function Menu_ini({ trocarTela, onLogout }) {
             >
               <ListItemText primary="Logout" />
             </ListItemButton>
+
           </List>
         </Box>
       </Drawer>

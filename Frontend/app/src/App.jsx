@@ -9,8 +9,9 @@ import OrdemDeServico from "./componentes/paginas/cadastros/ordens_de_serviço.j
 import OrdensDeServicoCatalogo from "./componentes/paginas/catalogos/ordens_de_serviço_catalogo.jsx";
 import ServicoCatalogo from "./componentes/paginas/catalogos/serviços_catalogo.jsx";
 import Servico from "./componentes/paginas/cadastros/serviços.jsx";
-import EquipamentosCatalogo from "./componentes/paginas/catalogos/equpamentos_catalogos.jsx";
-import EquipamentoArmazenado from "./componentes/paginas/cadastros/equipamento.jsx";
+
+import ClientesCatalogo from "./componentes/paginas/catalogos/cliente_catalogo.jsx";
+import ClienteForm from "./componentes/paginas/cadastros/cliente.jsx";
 
 export default function App() {
   const [permissoes, setPermissoes] = useState([]);
@@ -20,16 +21,18 @@ export default function App() {
 
   const [ordemSelecionada, setOrdemSelecionada] = useState(null);
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
-  const [equipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
 
   const telasSemMenu = [
     "verOrdem", "editarOrdem", "criarOrdem",
     "verServico", "editarServico", "criarServico",
-    "verEquipamento", "editarEquipamento", "criarEquipamento"
+    "verCliente", "editarCliente", "criarCliente"
   ];
 
   // FUNÇÕES AUXILIARES
 
+
+  // decodificar token
   const decodeToken = () => {
     try {
       const token = localStorage.getItem("token");
@@ -41,6 +44,7 @@ export default function App() {
     }
   };
 
+  // buscar permisoes por email
   const buscarPermissoesPorEmail = async (email) => {
     try {
       const token = localStorage.getItem("token");
@@ -64,19 +68,23 @@ export default function App() {
   const trocarTela = (novaTela, id = null) => {
     setTelaAtual(novaTela);
 
+    // ORDEM DE SERVIÇO
     if (novaTela.startsWith("verOrdem") || novaTela.startsWith("editarOrdem") || novaTela.startsWith("criarOrdem")) {
       setOrdemSelecionada(id);
     }
 
+    // SERVIÇOS
     if (novaTela.startsWith("verServico") || novaTela.startsWith("editarServico") || novaTela.startsWith("criarServico")) {
       setServicoSelecionado(id);
     }
 
-    if (novaTela.startsWith("verEquipamento") || novaTela.startsWith("editarEquipamento") || novaTela.startsWith("criarEquipamento")) {
-      setEquipamentoSelecionado(id);
+    // CLIENTES
+    if (novaTela.startsWith("verCliente") || novaTela.startsWith("editarCliente") || novaTela.startsWith("criarCliente")) {
+      setClienteSelecionado(id);
     }
   };
 
+  // LOGOUT
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserEmail("");
@@ -143,9 +151,12 @@ export default function App() {
 
       {telaAtual === "dashboard" && <Dashboard />}
 
-      {telaAtual === "equipamentos" && (
-        <EquipamentosCatalogo trocarTela={trocarTela} permissoes={permissoes} />
+
+      {/* CLIENTES */}
+      {telaAtual === "clientes" && (
+        <ClientesCatalogo trocarTela={trocarTela} permissoes={permissoes} />
       )}
+
 
       {telaAtual === "servicos" && (
         <ServicoCatalogo trocarTela={trocarTela} permissoes={permissoes} />
@@ -171,9 +182,9 @@ export default function App() {
         />
       )}
 
-      {(telaAtual === "verEquipamento" || telaAtual === "editarEquipamento" || telaAtual === "criarEquipamento") && (
-        <EquipamentoArmazenado
-          equipamentoId={equipamentoSelecionado}
+      {(telaAtual === "verCliente" || telaAtual === "editarCliente" || telaAtual === "criarCliente") && (
+        <ClienteForm
+          clienteId={clienteSelecionado}
           modo={telaAtual}
           trocarTela={trocarTela}
         />

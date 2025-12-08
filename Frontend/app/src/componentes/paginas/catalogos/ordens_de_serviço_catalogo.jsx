@@ -14,19 +14,17 @@ export default function OrdensDeServicoCatalogo({ trocarTela, permissoes = [] })
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // 🔹 Ordenação
+    // Ordenação
     const [campoOrdenacao, setCampoOrdenacao] = useState("id");
     const [ordem, setOrdem] = useState("asc");
 
-    // 🔹 Permissões
+    // Permissões
     const podeVer = permissoes.some(p => p.Permissao.descricao === "VER");
     const podeEditar = permissoes.some(p => p.Permissao.descricao === "EDITAR");
     const podeDeletar = permissoes.some(p => p.Permissao.descricao === "DELETAR");
     const podeCriar = permissoes.some(p => p.Permissao.descricao === "CRIAR");
 
-    // =============================
-    // 🔹 Buscar ordens
-    // =============================
+    // Buscar ordens
     const carregarOrdens = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -46,9 +44,7 @@ export default function OrdensDeServicoCatalogo({ trocarTela, permissoes = [] })
         carregarOrdens();
     }, []);
 
-    // =============================
-    // 🔹 Alterar campo de ordenação
-    // =============================
+    //  Alterar campo de ordenação
     const alterarOrdenacao = (campo) => {
         if (campoOrdenacao === campo) {
             setOrdem(ordem === "asc" ? "desc" : "asc");
@@ -58,17 +54,13 @@ export default function OrdensDeServicoCatalogo({ trocarTela, permissoes = [] })
         }
     };
 
-    // =============================
-    // 🔹 Filtrar ordens
-    // =============================
+    // Filtrar ordens
     const ordensFiltradas = ordens.filter((ordem) =>
         ordem.id.toString().includes(pesquisa) ||
         (ordem.cliente?.nome || "").toLowerCase().includes(pesquisa.toLowerCase())
     );
 
-    // =============================
-    // 🔹 Ordenar ordens
-    // =============================
+    // Ordenar ordens
     const ordensOrdenadas = [...ordensFiltradas].sort((a, b) => {
         const campo = campoOrdenacao;
 
@@ -92,17 +84,13 @@ export default function OrdensDeServicoCatalogo({ trocarTela, permissoes = [] })
             : String(v2).localeCompare(String(v1));
     });
 
-    // =============================
-    // 🔹 Paginação
-    // =============================
+    // Paginação
     const ordensPaginadas = ordensOrdenadas.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
     );
 
-    // =============================
-    // 🔹 Atualizar status
-    // =============================
+    // Atualizar status
     const handleStatusChange = async (id, novoStatus) => {
         try {
             const token = localStorage.getItem("token");
@@ -123,9 +111,7 @@ export default function OrdensDeServicoCatalogo({ trocarTela, permissoes = [] })
         }
     };
 
-    // =============================
-    // 🔹 Deletar ordem
-    // =============================
+    // Deletar ordem
     const handleDelete = async (id) => {
         if (!window.confirm("Tem certeza que deseja excluir esta OS?")) return;
 
