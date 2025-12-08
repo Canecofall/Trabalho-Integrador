@@ -13,6 +13,8 @@ import {
   Button,
   Stack,
   TablePagination,
+  Snackbar,
+  Alert
 } from "@mui/material";
 
 export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
@@ -20,6 +22,15 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
   const [pesquisa, setPesquisa] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openMessage, setOpenMessage] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const [messageSeverity, setMessageSeverity] = useState("success");
+
+  const mostrarMensagem = (texto, tipo = "error") => {
+    setMessageText(texto);
+    setMessageSeverity(tipo);
+    setOpenMessage(true);
+  };
 
   // Ordenação
   const [ordem, setOrdem] = useState("asc");
@@ -94,12 +105,26 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
       });
 
       setServicos((prev) => prev.filter((s) => s.id !== id));
+      mostrarMensagem("Serviço excluído com sucesso!", "success");
 
     } catch (erro) {
       console.error("Erro ao deletar:", erro);
-      alert("Erro ao deletar serviço.");
+
+      if (
+        erro.response &&
+        erro.response.data &&
+        erro.response.data.erro?.toLowerCase().includes("foreign")
+      ) {
+        mostrarMensagem(
+          "Não é possível excluir: este serviço está associado a uma Ordem de Serviço.",
+          "error"
+        );
+      } else {
+        mostrarMensagem("Erro ao deletar serviço.", "error");
+      }
     }
   };
+
 
   return (
     <div id="bg">
@@ -218,6 +243,21 @@ export default function ServicosCatalogo({ trocarTela, permissoes = [] }) {
             </Button>
           </Stack>
         )}
+        <Snackbar
+          open={openMessage}
+          autoHideDuration={3000}
+          onClose={() => setOpenMessage(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setOpenMessage(false)}
+            severity={messageSeverity}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {messageText}
+          </Alert>
+        </Snackbar>
 
       </Box>
     </div>

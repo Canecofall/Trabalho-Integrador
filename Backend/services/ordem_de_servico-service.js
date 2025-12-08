@@ -41,7 +41,6 @@ module.exports = {
         return ordemCriada;
     },
 
-    // ATUALIZAR
     // ATUALIZAR ORDEM
     atualizar: async (id, dados) => {
         const { itens, ...ordemData } = dados;

@@ -5,7 +5,7 @@ const authService = require("../services/auth-service");
 const servicoRouter = express.Router();
 
 /**
- * 🔹 LISTAR SERVIÇOS
+ * LISTAR SERVIÇOS
  * Permissão: VER
  */
 servicoRouter.get(

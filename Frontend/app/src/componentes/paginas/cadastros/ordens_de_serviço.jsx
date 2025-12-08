@@ -12,6 +12,8 @@ import {
   TableRow,
   Select,
   MenuItem,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -35,6 +37,15 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
   const [servicosEscolhidos, setServicosEscolhidos] = useState([]);
   const [servicoSelecionado, setServicoSelecionado] = useState("");
   const [qtd, setQtd] = useState(1);
+  const [openMessage, setOpenMessage] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const [messageSeverity, setMessageSeverity] = useState("error");
+
+  const mostrarMensagem = (texto, tipo = "error") => {
+    setMessageText(texto);
+    setMessageSeverity(tipo);
+    setOpenMessage(true);
+  };
 
   const removerServico = (id) => {
     setServicosEscolhidos((prev) =>
@@ -118,7 +129,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
       .catch((e) => console.error("Erro carregando OS:", e));
   }, [ordemId, modo, token]);
 
-  //   ADICIONAR SERVIÇO
+  // ADICIONAR SERVIÇO
   const adicionarServico = () => {
     const servico = catalogoServicos.find((s) => s.id === servicoSelecionado);
     if (!servico) return;
@@ -131,9 +142,25 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
     setServicoSelecionado("");
     setQtd(1);
   };
+  //validar campos da ordem de serviço
+  const validarOrdem = () => {
+    if (!ordem.id_cliente) {
+      mostrarMensagem("Selecione um cliente antes de salvar!", "error");
+      return false;
+    }
 
-  //   SALVAR OS (POST / PUT)
+    if (!ordem.equipamento.trim()) {
+      mostrarMensagem("O campo Equipamento é obrigatório!", "error");
+      return false;
+    }
+
+    return true;
+  };
+
+  // SALVAR OS (POST / PUT)
   const handleSalvar = async () => {
+    if (!validarOrdem()) return;
+
     const payload = {
       ...ordem,
       itens: servicosEscolhidos.map((s) => ({
@@ -143,24 +170,27 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
       })),
     };
 
+
     try {
       if (modo === "criarOrdem") {
         await axios.post("http://localhost:3002/ordens", payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Ordem criada!");
+
+        mostrarMensagem("Ordem criada com sucesso!", "success");
       } else {
         await axios.put(`http://localhost:3002/ordens/${ordemId}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Ordem atualizada!");
+
+        mostrarMensagem("Ordem atualizada com sucesso!", "success");
       }
 
-      trocarTela("ordens");
+      setTimeout(() => trocarTela("ordens"), 800);
 
     } catch (e) {
       console.error("Erro ao salvar OS:", e);
-      alert("Erro ao salvar OS.");
+      mostrarMensagem("Erro ao salvar a ordem de serviço!", "error");
     }
   };
 
@@ -355,6 +385,22 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
           </Button>
         )}
       </Box>
+      <Snackbar
+        open={openMessage}
+        autoHideDuration={3000}
+        onClose={() => setOpenMessage(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setOpenMessage(false)}
+          severity={messageSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {messageText}
+        </Alert>
+      </Snackbar>
+
     </Box>
   );
 }
