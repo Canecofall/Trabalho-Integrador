@@ -11,7 +11,7 @@ import {
 
 import axios from "axios";
 
-// mascara
+// Máscaras
 import {
     mascaraCpfCnpj,
     mascaraTelefone,
@@ -50,7 +50,18 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
         setOpenMessage(true);
     };
 
-    // Máscaras de input
+    // Converte DD/MM/AAAA → AAAA-MM-DD para o banco
+    const converterDataParaISO = (dataBR) => {
+        if (!dataBR) return null;
+
+        const partes = dataBR.split("/");
+        if (partes.length !== 3) return null;
+
+        const [dia, mes, ano] = partes;
+        return `${ano}-${mes}-${dia}`;
+    };
+
+    // Máscaras
     const handleChange = (e) => {
         const { name, value } = e.target;
         let novoValor = value;
@@ -63,25 +74,87 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
         setCliente({ ...cliente, [name]: novoValor });
     };
 
-    // Validação (somente nome e telefone obrigatórios)
+    // Validação
     const validar = () => {
-        const novosErros = {};
+        const errosTemp = {};
 
-        if (!cliente.nome.trim()) novosErros.nome = "O nome é obrigatório.";
-        if (!cliente.telefone.trim()) novosErros.telefone = "O telefone é obrigatório.";
+        // Nome
+        if (!cliente.nome || !cliente.nome.trim()) {
+            errosTemp.nome = "O nome é obrigatório.";
+        }
 
-        setErros(novosErros);
-        return Object.keys(novosErros).length === 0;
+        // Telefone
+        const telLimpo = (cliente.telefone || "").replace(/\D/g, "");
+        if (!telLimpo) {
+            errosTemp.telefone = "O telefone é obrigatório.";
+        } else if (telLimpo.length < 10 || telLimpo.length > 11) {
+            errosTemp.telefone = "Telefone inválido.";
+        }
+
+        // CPF/CNPJ
+        const doc = (cliente.cpf_cnpj || "").replace(/\D/g, "");
+        if ((cliente.cpf_cnpj || "").trim()) {
+            if (doc.length !== 11 && doc.length !== 14) {
+                errosTemp.cpf_cnpj = "CPF/CNPJ inválido.";
+            }
+        }
+
+        // CEP
+        const cepLimpo = (cliente.cep || "").replace(/\D/g, "");
+        if ((cliente.cep || "").trim() && cepLimpo.length !== 8) {
+            errosTemp.cep = "CEP inválido.";
+        }
+
+        // RG
+        const rgLimpo = (cliente.rg || "").replace(/\D/g, "");
+        if ((cliente.rg || "").trim() && (rgLimpo.length < 5 || rgLimpo.length > 14)) {
+            errosTemp.rg = "RG inválido.";
+        }
+
+        // Nascimento
+        const nascimentoStr = (cliente.nascimento || "").trim();
+
+        if (nascimentoStr) {
+            const regexData = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+            if (!regexData.test(nascimentoStr)) {
+                errosTemp.nascimento = "Data inválida. Use DD/MM/AAAA.";
+            } else {
+                const [dia, mes, ano] = nascimentoStr.split("/").map(Number);
+                const dataObj = new Date(ano, mes - 1, dia);
+
+                if (
+                    dataObj.getFullYear() !== ano ||
+                    dataObj.getMonth() !== mes - 1 ||
+                    dataObj.getDate() !== dia
+                ) {
+                    errosTemp.nascimento = "Data inexistente!";
+                }
+            }
+        }
+
+        setErros(errosTemp);
+        return Object.keys(errosTemp).length === 0;
     };
 
-    // Buscar cliente ao editar/ver
+    // Buscar cliente
     useEffect(() => {
         if (!clienteId) return;
 
-        axios.get(`http://localhost:3002/clientes/${clienteId}`, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-            .then(res => setCliente(res.data))
+        axios
+            .get(`http://localhost:3002/clientes/${clienteId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(res => {
+                // converter data ISO → BR para exibir no formulário
+                const clienteBD = res.data;
+                if (clienteBD.nascimento) {
+                    const [ano, mes, dia] = clienteBD.nascimento.split("-");
+                    clienteBD.nascimento = `${dia}/${mes}/${ano}`;
+                }
+
+                setCliente(clienteBD);
+            })
             .catch(err => {
                 console.error(err);
                 mostrarMensagem("Erro ao carregar dados do cliente!", "error");
@@ -89,21 +162,26 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
 
     }, [clienteId]);
 
-    // Criar / Editar cliente
+    // Salvar
     const handleSalvar = async () => {
         if (!validar()) {
             mostrarMensagem("Existem erros no formulário!", "error");
             return;
         }
 
+        const dadosParaEnviar = {
+            ...cliente,
+            nascimento: converterDataParaISO(cliente.nascimento)
+        };
+
         try {
             if (modo === "criarCliente") {
-                await axios.post("http://localhost:3002/clientes", cliente, {
+                await axios.post("http://localhost:3002/clientes", dadosParaEnviar, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 mostrarMensagem("Cliente criado com sucesso!", "success");
             } else {
-                await axios.put(`http://localhost:3002/clientes/${clienteId}`, cliente, {
+                await axios.put(`http://localhost:3002/clientes/${clienteId}`, dadosParaEnviar, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 mostrarMensagem("Cliente atualizado!", "success");
@@ -143,11 +221,8 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
                 ].map(([label, field]) => (
 
                     <Grid
-                        item
                         key={field}
-                        sx={{
-                            width: { xs: "100%", sm: "50%", md: "33%" }
-                        }}
+                        sx={{ width: { xs: "100%", sm: "50%", md: "33%" } }}
                     >
                         <TextField
                             fullWidth
@@ -175,7 +250,7 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
                 )}
             </Box>
 
-            {/* Snackbar de mensagens */}
+            {/* Snackbar */}
             <Snackbar
                 open={openMessage}
                 autoHideDuration={3000}
