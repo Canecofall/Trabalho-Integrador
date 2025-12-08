@@ -15,16 +15,21 @@ module.exports = (sequelize, DataTypes) => {
             },
             cpf_cnpj: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
-                unique: true,
+                allowNull: true,
+                set(value) {
+                    this.setDataValue("cpf_cnpj", value === "" ? null : value);
+                }
             },
             telefone: {
                 type: DataTypes.STRING(20),
-                allowNull: true,
+                allowNull: false,
             },
             email: {
                 type: DataTypes.STRING(100),
                 allowNull: true,
+                set(value) {
+                    this.setDataValue("email", value === "" ? null : value);
+                }
             },
             cep: {
                 type: DataTypes.STRING(20),
@@ -37,6 +42,9 @@ module.exports = (sequelize, DataTypes) => {
             nascimento: {
                 type: DataTypes.DATEONLY,
                 allowNull: true,
+                set(value) {
+                    this.setDataValue("nascimento", value === "" ? null : value);
+                }
             },
             contribuinte: {
                 type: DataTypes.STRING(10),

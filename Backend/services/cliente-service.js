@@ -12,13 +12,16 @@ module.exports = {
     },
 
     async criarCliente(dados) {
-        if (!dados.nome || !dados.cpf_cnpj) {
-            throw new Error("Nome e CPF/CNPJ são obrigatórios.");
+        if (!dados.nome || !dados.telefone) {
+            throw new Error("Nome e Telefone são obrigatórios.");
         }
         return await clienteRepository.criar(dados);
     },
 
     async atualizarCliente(id, dados) {
+        if (!dados.nome || !dados.telefone) {
+            throw new Error("Nome e Telefone são obrigatórios.");
+        }
         return await clienteRepository.atualizar(id, dados);
     },
 
