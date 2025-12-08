@@ -36,11 +36,15 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
   const [servicoSelecionado, setServicoSelecionado] = useState("");
   const [qtd, setQtd] = useState(1);
 
+  const removerServico = (id) => {
+    setServicosEscolhidos((prev) =>
+      prev.filter((s) => s.id !== id)
+    );
+  };
+
   const token = localStorage.getItem("token");
 
-  // ==========================================================
   //   CARREGAR CLIENTES E SERVIÇOS
-  // ==========================================================
   useEffect(() => {
     const carregar = async () => {
       try {
@@ -62,9 +66,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
     carregar();
   }, [token]);
 
-  // ==========================================================
   //   ALTERAÇÃO DE CAMPOS
-  // ==========================================================
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -77,9 +79,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
     }
   };
 
-  // ==========================================================
   //   CARREGAR ORDEM EXISTENTE (VER/EDITAR)
-  // ==========================================================
   useEffect(() => {
     if (!ordemId || modo === "criarOrdem") return;
 
@@ -118,9 +118,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
       .catch((e) => console.error("Erro carregando OS:", e));
   }, [ordemId, modo, token]);
 
-  // ==========================================================
   //   ADICIONAR SERVIÇO
-  // ==========================================================
   const adicionarServico = () => {
     const servico = catalogoServicos.find((s) => s.id === servicoSelecionado);
     if (!servico) return;
@@ -134,9 +132,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
     setQtd(1);
   };
 
-  // ==========================================================
   //   SALVAR OS (POST / PUT)
-  // ==========================================================
   const handleSalvar = async () => {
     const payload = {
       ...ordem,
@@ -168,9 +164,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
     }
   };
 
-  // ==========================================================
   //   INTERFACE
-  // ==========================================================
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h5" gutterBottom>
@@ -190,7 +184,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
           <Select
             fullWidth
             name="id_cliente"
-            value={ordem.id_cliente}
+            value={clientes.length > 0 ? ordem.id_cliente : ""}
             onChange={handleChange}
             disabled={modo === "verOrdem"}
           >
@@ -204,6 +198,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
               </MenuItem>
             ))}
           </Select>
+
         </Grid>
       </Grid>
 
@@ -318,6 +313,7 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
               <TableCell>Qtd</TableCell>
               <TableCell>Preço</TableCell>
               <TableCell>Total</TableCell>
+              <TableCell>Ações</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -327,8 +323,22 @@ export default function OrdemDeServico({ ordemId, modo, trocarTela }) {
                 <TableCell>{s.qtd}</TableCell>
                 <TableCell>R$ {s.preco}</TableCell>
                 <TableCell>R$ {(s.qtd * s.preco).toFixed(2)}</TableCell>
+
+                {/*Botão de Remover*/}
+                <TableCell>
+                  {modo !== "verOrdem" && (
+                    <Button
+                      color="error"
+                      variant="outlined"
+                      onClick={() => removerServico(s.id)}
+                    >
+                      Remover
+                    </Button>
+                  )}
+                </TableCell>
               </TableRow>
             ))}
+
           </TableBody>
         </Table>
       )}

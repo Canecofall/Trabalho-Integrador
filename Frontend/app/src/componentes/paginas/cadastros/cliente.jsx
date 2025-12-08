@@ -7,6 +7,14 @@ import {
   Divider, 
 } from "@mui/material";
 import axios from "axios";
+// mascara
+import {
+  mascaraCpfCnpj,
+  mascaraTelefone,
+  mascaraCEP,
+  mascaraData
+} from "../../mascara/mascara";
+
 import { useEffect, useState } from "react";
 
 export default function ClienteForm({ clienteId, modo, trocarTela }) {
@@ -25,9 +33,20 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
 
   const token = localStorage.getItem("token");
 
+  // aplicação
   const handleChange = (e) => {
-    setCliente({ ...cliente, [e.target.name]: e.target.value });
-  };
+  const { name, value } = e.target;
+
+  let novoValor = value;
+
+  if (name === "cpf_cnpj") novoValor = mascaraCpfCnpj(value);
+  if (name === "telefone") novoValor = mascaraTelefone(value);
+  if (name === "cep") novoValor = mascaraCEP(value);
+  if (name === "nascimento") novoValor = mascaraData(value);
+
+  setCliente({ ...cliente, [name]: novoValor });
+};
+
 
   useEffect(() => {
     if (!clienteId) return;
