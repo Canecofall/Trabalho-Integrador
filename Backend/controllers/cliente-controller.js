@@ -68,10 +68,20 @@ clienteRouter.delete(
         try {
             await clienteService.deletarCliente(req.params.id);
             res.json({ mensagem: "Cliente deletado com sucesso." });
+
         } catch (err) {
+
+            // 🔥 Caso o cliente possua ordens vinculadas (Erro de FK)
+            if (err.name === "SequelizeForeignKeyConstraintError") {
+                return res.status(400).json({
+                    erro: "Não é possível excluir: o cliente está associado a uma ordem de serviço."
+                });
+            }
+
             res.status(400).json({ erro: err.message });
         }
     }
 );
+
 
 module.exports = clienteRouter;

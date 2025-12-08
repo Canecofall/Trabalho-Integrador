@@ -43,18 +43,14 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
 
     const token = localStorage.getItem("token");
 
-    // -----------------------------
-    // 🟦 Função de mensagem
-    // -----------------------------
+    // Função de mensagem
     const mostrarMensagem = (texto, tipo = "success") => {
         setMessageText(texto);
         setMessageSeverity(tipo);
         setOpenMessage(true);
     };
 
-    // -----------------------------
-    // 🟦 Máscaras de input
-    // -----------------------------
+    // Máscaras de input
     const handleChange = (e) => {
         const { name, value } = e.target;
         let novoValor = value;
@@ -67,9 +63,7 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
         setCliente({ ...cliente, [name]: novoValor });
     };
 
-    // -----------------------------
-    // 🟦 Validação (somente nome e telefone obrigatórios)
-    // -----------------------------
+    // Validação (somente nome e telefone obrigatórios)
     const validar = () => {
         const novosErros = {};
 
@@ -80,9 +74,7 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
         return Object.keys(novosErros).length === 0;
     };
 
-    // -----------------------------
-    // 🟦 Buscar cliente ao editar/ver
-    // -----------------------------
+    // Buscar cliente ao editar/ver
     useEffect(() => {
         if (!clienteId) return;
 
@@ -97,9 +89,7 @@ export default function ClienteForm({ clienteId, modo, trocarTela }) {
 
     }, [clienteId]);
 
-    // -----------------------------
-    // 🟦 Criar / Editar cliente
-    // -----------------------------
+    // Criar / Editar cliente
     const handleSalvar = async () => {
         if (!validar()) {
             mostrarMensagem("Existem erros no formulário!", "error");

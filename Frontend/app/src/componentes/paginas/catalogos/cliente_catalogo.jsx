@@ -12,6 +12,8 @@ import {
     Button,
     Stack,
     TablePagination,
+    Snackbar,
+    Alert
 } from "@mui/material";
 import axios from "axios";
 
@@ -29,6 +31,15 @@ export default function ClientesCatalogo({ trocarTela, permissoes = [] }) {
     const podeEditar = permissoes.some(p => p.Permissao.descricao === "EDITAR");
     const podeDeletar = permissoes.some(p => p.Permissao.descricao === "DELETAR");
     const podeCriar = permissoes.some(p => p.Permissao.descricao === "CRIAR");
+    const [openMessage, setOpenMessage] = useState(false);
+    const [messageText, setMessageText] = useState("");
+    const [messageSeverity, setMessageSeverity] = useState("success");
+
+    const mostrarMensagem = (texto, tipo = "success") => {
+        setMessageText(texto);
+        setMessageSeverity(tipo);
+        setOpenMessage(true);
+    };
 
     const token = localStorage.getItem("token");
 
@@ -48,7 +59,7 @@ export default function ClientesCatalogo({ trocarTela, permissoes = [] }) {
         carregarClientes();
     }, []);
 
-    // 🔽 Alternar ordenação igual ao catálogo de ordens
+    // Alternar ordenação igual ao catálogo de ordens
     const alterarOrdenacao = (campo) => {
         if (campoOrdenacao === campo) {
             setOrdem(ordem === "asc" ? "desc" : "asc");
@@ -57,34 +68,37 @@ export default function ClientesCatalogo({ trocarTela, permissoes = [] }) {
             setOrdem("asc");
         }
     };
+    const termo = pesquisa.toLowerCase().trim();
+    const termoNum = pesquisa.replace(/\D/g, "");
 
-    // 🔽 Aplicar filtro
-    const clientesFiltrados = clientes.filter(c =>
-        c.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
-        c.cpf_cnpj.includes(pesquisa)
-    );
+    const clientesOrdenados = clientes.filter((c) => {
+        const nome = (c.nome || "").toLowerCase();
+        const cpf = (c.cpf_cnpj || "").replace(/\D/g, "");
 
-    // 🔽 Ordenação
-    const clientesOrdenados = [...clientesFiltrados].sort((a, b) => {
-        const campo = campoOrdenacao;
+        // Se pesquisa está vazia, retorna todos
+        if (!termo && !termoNum) return true;
 
-        let v1 = a[campo] ?? "";
-        let v2 = b[campo] ?? "";
+        // Se pesquisa contém letras, busca no nome
+        if (/[a-z]/i.test(pesquisa)) {
+            return nome.includes(termo);
+        }
 
-        v1 = String(v1).toLowerCase();
-        v2 = String(v2).toLowerCase();
+        // Se pesquisa contém números, busca no CPF/CNPJ
+        if (termoNum) {
+            return cpf.includes(termoNum);
+        }
 
-        return ordem === "asc" ? v1.localeCompare(v2) : v2.localeCompare(v1);
+        return false;
     });
 
-    // Paginação
     const clientesPaginados = clientesOrdenados.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
     );
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Tem certeza que deseja excluir este cliente?")) return;
+        if (!window.confirm("Tem certeza que deseja excluir este cliente?"))
+            return;
 
         try {
             await axios.delete(`http://localhost:3002/clientes/${id}`, {
@@ -92,11 +106,20 @@ export default function ClientesCatalogo({ trocarTela, permissoes = [] }) {
             });
 
             setClientes((prev) => prev.filter((c) => c.id !== id));
+
+            mostrarMensagem("Cliente deletado com sucesso!", "success");
+
         } catch (error) {
-            console.error("Erro ao deletar cliente:", error);
-            alert("Não foi possível deletar o cliente.");
+
+            // Mensagem enviada pelo backend (caso esteja associado a OS)
+            const msg =
+                error?.response?.data?.erro ||
+                "Não foi possível deletar o cliente.";
+
+            mostrarMensagem(msg, "error");
         }
     };
+
 
     const seta = (campo) =>
         campoOrdenacao === campo ? (ordem === "asc" ? " ▲" : " ▼") : "";
@@ -218,6 +241,22 @@ export default function ClientesCatalogo({ trocarTela, permissoes = [] }) {
                     </Button>
                 </Stack>
             )}
+            <Snackbar
+                open={openMessage}
+                autoHideDuration={3000}
+                onClose={() => setOpenMessage(false)}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+                <Alert
+                    onClose={() => setOpenMessage(false)}
+                    severity={messageSeverity}
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {messageText}
+                </Alert>
+            </Snackbar>
+
         </Box>
     );
 }
