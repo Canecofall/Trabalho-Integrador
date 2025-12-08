@@ -32,16 +32,16 @@ CREATE TABLE servicos (
 );
 
 CREATE TABLE cliente (
-  id SERIAL PRIMARY KEY,
-  nome VARCHAR(100) NOT NULL,
-  cpf_cnpj VARCHAR(20) NOT NULL UNIQUE,
-  telefone VARCHAR(20),
-  email VARCHAR(100),
-  cep VARCHAR(20),
-  rg VARCHAR(20),
-  nascimento DATE,
-  contribuinte VARCHAR(10),
-  inscricao_estadual VARCHAR(30)
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf_cnpj VARCHAR(20),
+    telefone VARCHAR(20),
+    email VARCHAR(100),
+    cep VARCHAR(20),
+    rg VARCHAR(20),
+    nascimento DATE,
+    contribuinte VARCHAR(10),
+    inscricao_estadual VARCHAR(50)
 );
 
 CREATE TABLE ordem_servico (
@@ -56,20 +56,23 @@ CREATE TABLE ordem_servico (
     perifericos VARCHAR(255),
     senha VARCHAR(255),
 
+    status VARCHAR(30) DEFAULT 'ABERTA',
+
     criado_em TIMESTAMP DEFAULT NOW(),
 
     FOREIGN KEY (id_cliente) REFERENCES cliente(id)
 );
 
 CREATE TABLE ordem_servico_item (
-  id SERIAL PRIMARY KEY,
-  id_ordem INT NOT NULL,
-  id_servico INT NOT NULL,
-  quantidade INT NOT NULL DEFAULT 1,
-  preco_unit NUMERIC(10,2) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    id_ordem INT NOT NULL,
+    id_servico INT NOT NULL,
 
-  FOREIGN KEY (id_ordem) REFERENCES ordem_servico(id),
-  FOREIGN KEY (id_servico) REFERENCES servicos(id)
+    quantidade INT NOT NULL DEFAULT 1,
+    preco NUMERIC(10, 2) NOT NULL,
+
+    FOREIGN KEY (id_ordem) REFERENCES ordem_servico(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_servico) REFERENCES servicos(id)
 );
 
 
@@ -77,7 +80,7 @@ CREATE TABLE ordem_servico_item (
 --usuario admin@outlook.com
 --senha   Administrador
 INSERT INTO usuario (email, nome, senha) 
-VALUES ('admin@outlook.com', 'Administrador', '"$2b$10$mHBljwcXFAHfT73HXh5FZOZsgsqmiBGrLALB3qJhSzJ3CLCqWoN8K"');
+VALUES ('admin@outlook.com', 'Administrador', '$2b$10$mHBljwcXFAHfT73HXh5FZOZsgsqmiBGrLALB3qJhSzJ3CLCqWoN8K');
 
 --usuario usuario@outlook.com
 --senha   usuario

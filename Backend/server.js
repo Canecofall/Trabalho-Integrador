@@ -10,6 +10,8 @@ const permissaoRouter = require("./controllers/permissao-controller");
 const authRouter = require("./controllers/auth-controller");
 const servicoController = require("./controllers/servico-controller");
 const clienteController = require("./controllers/cliente-controller");
+const ordemServicoController = require("./controllers/ordem_de_servico-controler");
+const dashboardController = require("./controllers/dashboard-controller");
 
 // Services
 const authService = require("./services/auth-service");
@@ -44,6 +46,8 @@ app.use("/usuario", usuarioRouter);
 app.use("/permissao", permissaoRouter);
 app.use("/servicos", servicoController);
 app.use("/clientes", clienteController);
+app.use("/ordens", ordemServicoController);
+app.use("/dashboard", dashboardController);
 
 // INICIAR SERVIDOR *DEPOIS* de registrar as rotas
 const PORT = 3002;

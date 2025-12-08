@@ -47,10 +47,12 @@ servicoRouter.post(
     ...authService.requirePermissao("CRIAR"),
     async (req, res) => {
         try {
-           //const novo = await servicoService.criar(req.body);
+           const novo = await servicoService.criar(req.body);
             res.status(201).json(novo);
         } catch (err) {
-           //console.log("❌ ERRO AO CRIAR SERVIÇO:", err.message);
+           //console.log(" ERRO AO CRIAR SERVIÇO:", err.message);
+           //console.log(" DADOS RECEBIDOS NO BACKEND:", req.body);
+
             res.status(400).json({ erro: err.message });
         }
     }

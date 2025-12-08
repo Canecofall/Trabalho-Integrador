@@ -1,17 +1,21 @@
-POST http://localhost:3002/clientes
+@token = 
+POST http://localhost:3002/ordens
 Content-Type: application/json
-Authorization: Bearer {{token}}
-@token = ""
+Authorization: Bearer token
+
 
 {
-  "nome": "João Silva",
-  "cpf_cnpj": "12345678900",
-  "telefone": "4799999999",
-  "email": "joao@example.com",
-  "cep": "89000000",
-  "rg": "1234567",
-  "nascimento": "1990-01-01",
-  "contribuinte": "Sim",
-  "inscricao_estadual": "987654321"
+  "id_cliente": 1,
+  "equipamento": "Notebook",
+  "marca": "Dell",
+  "modelo": "Inspiron 15",
+  "numero_serie": "ABC123",
+  "defeito": "Não liga",
+  "perifericos": "Carregador",
+  "senha": "1234",
+  "status": "ABERTA",
+  "itens": [
+    { "id_servico": 2, "quantidade": 1, "preco": 150 },
+    { "id_servico": 1, "quantidade": 2, "preco": 80 }
+  ]
 }
-
